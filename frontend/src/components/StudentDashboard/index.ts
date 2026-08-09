@@ -1,0 +1,14 @@
+export { DashboardView } from './DashboardView';
+export { WelcomeBanner } from './WelcomeBanner';
+export { StatCards } from './StatCards';
+export { ProfileCompletion } from './ProfileCompletion';
+export { RecentApplications } from './RecentApplications';
+export { JobListingsView } from './JobListingsView';
+export { MyApplicationsView } from './MyApplicationsView';
+export { CompaniesView } from './CompaniesView';
+export { ProfileView } from './ProfileView';
+export { PlacementDriveView } from './PlacementDriveView';
+export { ResourcesView } from './ResourcesView';
+export { TrainingSkillsView } from './TrainingSkillsView';
+export { MessagesView } from './MessagesView';
+export { SettingsView } from './SettingsView';
