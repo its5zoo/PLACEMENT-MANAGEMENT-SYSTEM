@@ -1,75 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { ApplicationItem } from '../../types';
-import { Search } from 'lucide-react';
+import { Search, Loader2 } from 'lucide-react';
 import { StatusBadge } from '../common/StatusBadge';
+import { api } from '../../services/api';
 
 export const MyApplicationsView: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState<string>('All');
   const [search, setSearch] = useState<string>('');
+  const [applications, setApplications] = useState<ApplicationItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const applications: ApplicationItem[] = [
-    {
-      id: 'app-1',
-      company: 'Google',
-      role: 'Software Engineer',
-      status: 'Applied',
-      date: '20 May 2024',
-      logo: 'G',
-      logoBg: '#ffffff',
-      location: 'Bangalore, India',
-      ctc: 'Rs. 24 LPA'
-    },
-    {
-      id: 'app-2',
-      company: 'Microsoft',
-      role: 'Frontend Developer',
-      status: 'In-Progress',
-      date: '18 May 2024',
-      logo: 'MS',
-      logoBg: '#ffffff',
-      location: 'Hyderabad, India',
-      ctc: 'Rs. 22 LPA'
-    },
-    {
-      id: 'app-3',
-      company: 'Infosys',
-      role: 'System Engineer',
-      status: 'Selected',
-      date: '15 May 2024',
-      logo: 'INF',
-      logoBg: '#ffffff',
-      location: 'Pune, India',
-      ctc: 'Rs. 9.5 LPA'
-    },
-    {
-      id: 'app-4',
-      company: 'Goldman Sachs',
-      role: 'Engineering Analyst',
-      status: 'In-Progress',
-      date: '12 May 2024',
-      logo: 'GS',
-      logoBg: '#ffffff',
-      location: 'Bangalore, India',
-      ctc: 'Rs. 20 LPA'
-    },
-    {
-      id: 'app-5',
-      company: 'Amazon',
-      role: 'SDE-1',
-      status: 'Rejected',
-      date: '02 May 2024',
-      logo: 'AMZ',
-      logoBg: '#ffffff',
-      location: 'Gurgaon, India',
-      ctc: 'Rs. 26 LPA'
+  useEffect(() => {
+    loadApplications();
+  }, [filterStatus, search]);
+
+  const loadApplications = async () => {
+    try {
+      setLoading(true);
+      const res = await api.getMyApplications(filterStatus, search);
+      if (res.data) {
+        const mapped = res.data.map((app: any) => ({
+          id: app._id,
+          company: app.company,
+          role: app.role,
+          status: app.status,
+          date: app.appliedDate || new Date(app.createdAt).toLocaleDateString('en-GB'),
+          logo: app.logo || app.company.slice(0, 2).toUpperCase(),
+          logoBg: app.logoBg || '#ffffff',
+          location: app.location || 'India',
+          ctc: app.ctc || 'Competitive',
+        }));
+        setApplications(mapped);
+      }
+    } catch (err) {
+      console.error('Error fetching applications:', err);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  const filtered = applications.filter(app => {
-    const matchesStatus = filterStatus === 'All' || app.status === filterStatus || (filterStatus === 'In Progress' && app.status === 'In-Progress');
-    const matchesSearch = app.company.toLowerCase().includes(search.toLowerCase()) || app.role.toLowerCase().includes(search.toLowerCase());
-    return matchesStatus && matchesSearch;
-  });
+  const filtered = applications;
 
   return (
     <div className="view-container">
@@ -121,38 +91,55 @@ export const MyApplicationsView: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map(app => (
-                <tr key={app.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{ padding: '16px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <div style={{
-                        width: '36px',
-                        height: '36px',
-                        borderRadius: '8px',
-                        border: '1px solid #e2e8f0',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 800,
-                        fontSize: '0.85rem',
-                        color: '#2563eb'
-                      }}>
-                        {app.logo}
-                      </div>
-                      <div>
-                        <div style={{ fontWeight: 700, color: '#0f172a' }}>{app.company}</div>
-                        <div style={{ fontSize: '0.8rem', color: '#64748b' }}>{app.role}</div>
-                      </div>
+              {loading ? (
+                <tr>
+                  <td colSpan={5} style={{ textAlign: 'center', padding: '32px', color: '#64748b' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                      <Loader2 size={18} className="spin" style={{ animation: 'spin 1s linear infinite' }} />
+                      <span>Fetching applications from database...</span>
                     </div>
                   </td>
-                  <td style={{ padding: '16px', color: '#475569' }}>{app.location}</td>
-                  <td style={{ padding: '16px', fontWeight: 600, color: '#0f172a' }}>{app.ctc}</td>
-                  <td style={{ padding: '16px', color: '#64748b' }}>{app.date}</td>
-                  <td style={{ padding: '16px' }}>
-                    <StatusBadge status={app.status} />
+                </tr>
+              ) : filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={5} style={{ textAlign: 'center', padding: '32px', color: '#64748b' }}>
+                    No applications found in this category.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filtered.map(app => (
+                  <tr key={app.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                    <td style={{ padding: '16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{
+                          width: '36px',
+                          height: '36px',
+                          borderRadius: '8px',
+                          border: '1px solid #e2e8f0',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 800,
+                          fontSize: '0.85rem',
+                          color: '#2563eb'
+                        }}>
+                          {app.logo}
+                        </div>
+                        <div>
+                          <div style={{ fontWeight: 700, color: '#0f172a' }}>{app.company}</div>
+                          <div style={{ fontSize: '0.8rem', color: '#64748b' }}>{app.role}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style={{ padding: '16px', color: '#475569' }}>{app.location}</td>
+                    <td style={{ padding: '16px', fontWeight: 600, color: '#0f172a' }}>{app.ctc}</td>
+                    <td style={{ padding: '16px', color: '#64748b' }}>{app.date}</td>
+                    <td style={{ padding: '16px' }}>
+                      <StatusBadge status={app.status} />
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

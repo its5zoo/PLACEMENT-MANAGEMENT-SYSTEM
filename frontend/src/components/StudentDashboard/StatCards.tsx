@@ -3,28 +3,33 @@ import { Send, Hourglass, Medal, TrendingUp } from 'lucide-react';
 
 interface StatCardsProps {
   onCardClick?: (tab: string) => void;
+  counts?: {
+    jobsApplied?: number;
+    inProgress?: number;
+    offersReceived?: number;
+  };
 }
 
-export const StatCards: React.FC<StatCardsProps> = ({ onCardClick }) => {
+export const StatCards: React.FC<StatCardsProps> = ({ onCardClick, counts }) => {
   const stats = [
     {
       id: 'jobs-applied',
       label: 'Jobs Applied',
-      value: '12',
+      value: counts?.jobsApplied !== undefined ? String(counts.jobsApplied) : '5',
       icon: Send,
       color: 'blue',
     },
     {
       id: 'in-progress',
       label: 'In Progress',
-      value: '3',
+      value: counts?.inProgress !== undefined ? String(counts.inProgress) : '2',
       icon: Hourglass,
       color: 'amber',
     },
     {
       id: 'offers-received',
       label: 'Offers Received',
-      value: '1',
+      value: counts?.offersReceived !== undefined ? String(counts.offersReceived) : '1',
       icon: Medal,
       color: 'green',
     },

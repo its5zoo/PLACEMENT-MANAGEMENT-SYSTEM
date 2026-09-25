@@ -5,31 +5,27 @@ export const ProfileCompletion: React.FC = () => {
   const completionItems = [
     {
       id: 1,
-      name: 'Profile Completion',
+      name: 'Academic Profile',
       percentage: 85,
       icon: User,
-      color: 'blue'
     },
     {
       id: 2,
-      name: 'Resume Score',
+      name: 'Resume & Verified Marksheets',
       percentage: 75,
       icon: FileText,
-      color: 'green'
     },
     {
       id: 3,
-      name: 'Skills Added',
+      name: 'Technical Skills Matrix',
       percentage: 65,
       icon: Code2,
-      color: 'purple'
     },
     {
       id: 4,
-      name: 'Certifications',
-      percentage: 40,
+      name: 'Certifications & Projects',
+      percentage: 50,
       icon: Award,
-      color: 'orange'
     }
   ];
 
@@ -37,6 +33,7 @@ export const ProfileCompletion: React.FC = () => {
     <div className="section-card">
       <div className="card-header">
         <h3 className="card-title">Placement Profile Completion</h3>
+        <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Overall: 72%</span>
       </div>
 
       <div className="progress-list">
@@ -46,8 +43,8 @@ export const ProfileCompletion: React.FC = () => {
             <div key={item.id} className="progress-item">
               <div className="progress-header">
                 <div className="progress-label-box">
-                  <div className={`progress-icon ${item.color}`}>
-                    <Icon size={17} />
+                  <div className="progress-icon" style={{ backgroundColor: '#f1f5f9', color: '#334155' }}>
+                    <Icon size={16} />
                   </div>
                   <span className="progress-name">{item.name}</span>
                 </div>
@@ -56,8 +53,8 @@ export const ProfileCompletion: React.FC = () => {
 
               <div className="progress-bar-container">
                 <div 
-                  className={`progress-bar-fill ${item.color}`}
-                  style={{ width: `${item.percentage}%` }}
+                  className="progress-bar-fill"
+                  style={{ width: `${item.percentage}%`, backgroundColor: '#2563eb' }}
                 />
               </div>
             </div>

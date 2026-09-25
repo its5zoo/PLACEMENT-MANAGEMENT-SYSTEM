@@ -12,3 +12,8 @@ export { ResourcesView } from './ResourcesView';
 export { TrainingSkillsView } from './TrainingSkillsView';
 export { MessagesView } from './MessagesView';
 export { SettingsView } from './SettingsView';
+export { RecommendationsView } from './RecommendationsView';
+export { ReadinessScoreView } from './ReadinessScoreView';
+export { DocumentsView } from './DocumentsView';
+export { OffersView } from './OffersView';
+export { EligibilityModal } from './EligibilityModal';

@@ -1,18 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Company } from '../../types';
-import { Search, ExternalLink } from 'lucide-react';
+import { Search, ExternalLink, Loader2 } from 'lucide-react';
+import { api } from '../../services/api';
 
 export const CompaniesView: React.FC = () => {
   const [search, setSearch] = useState('');
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const companies: Company[] = [
-    { id: '1', name: 'Google India', industry: 'Technology & Cloud', activeDrives: 2, avgPackage: 'Rs. 24.5 LPA', logoBg: '#eff6ff', logoText: 'G' },
-    { id: '2', name: 'Microsoft Corporation', industry: 'Software & Cloud Solutions', activeDrives: 1, avgPackage: 'Rs. 22.0 LPA', logoBg: '#fffbeb', logoText: 'MS' },
-    { id: '3', name: 'Infosys Limited', industry: 'IT Services & Consulting', activeDrives: 3, avgPackage: 'Rs. 9.5 LPA', logoBg: '#f0fdf4', logoText: 'INF' },
-    { id: '4', name: 'Amazon Web Services', industry: 'E-commerce & Cloud Computing', activeDrives: 1, avgPackage: 'Rs. 28.0 LPA', logoBg: '#fef2f2', logoText: 'AMZ' },
-    { id: '5', name: 'Goldman Sachs', industry: 'Investment Banking & Fintech', activeDrives: 2, avgPackage: 'Rs. 22.5 LPA', logoBg: '#faf5ff', logoText: 'GS' },
-    { id: '6', name: 'Adobe Inc.', industry: 'Digital Media & Software', activeDrives: 1, avgPackage: 'Rs. 21.0 LPA', logoBg: '#eff6ff', logoText: 'ADB' },
-  ];
+  useEffect(() => {
+    loadCompanies();
+  }, []);
+
+  const loadCompanies = async () => {
+    try {
+      setLoading(true);
+      const res = await api.getCompanies();
+      if (res.data) {
+        const mapped = res.data.map((c: any) => ({
+          id: c._id,
+          name: c.name,
+          industry: c.industry,
+          activeDrives: c.activeDrives || 1,
+          avgPackage: c.avgPackage,
+          logoBg: c.logoBg || '#eff6ff',
+          logoText: c.logoText || c.name.slice(0, 2).toUpperCase(),
+        }));
+        setCompanies(mapped);
+      }
+    } catch (err) {
+      console.error('Error fetching companies:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filtered = companies.filter(c => 
     c.name.toLowerCase().includes(search.toLowerCase()) || 
@@ -33,9 +54,15 @@ export const CompaniesView: React.FC = () => {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
-        {filtered.map(c => (
-          <div key={c.id} className="section-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      {loading ? (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', color: '#64748b' }}>
+          <Loader2 size={24} className="spin" style={{ marginRight: '8px', animation: 'spin 1s linear infinite' }} />
+          <span>Loading companies from database...</span>
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+          {filtered.map(c => (
+            <div key={c.id} className="section-card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
               <div style={{
                 width: '48px',
@@ -76,6 +103,7 @@ export const CompaniesView: React.FC = () => {
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 };

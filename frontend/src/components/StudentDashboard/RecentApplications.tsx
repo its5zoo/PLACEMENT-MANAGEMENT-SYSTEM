@@ -6,13 +6,15 @@ import { StatusBadge } from '../common/StatusBadge';
 interface RecentApplicationsProps {
   onViewAll?: () => void;
   onSelectApplication?: (app: ApplicationItem) => void;
+  applications?: ApplicationItem[];
 }
 
 export const RecentApplications: React.FC<RecentApplicationsProps> = ({ 
   onViewAll, 
-  onSelectApplication 
+  onSelectApplication,
+  applications: propApps
 }) => {
-  const applications: ApplicationItem[] = [
+  const defaultApplications: ApplicationItem[] = [
     {
       id: 'app-1',
       company: 'Google',
@@ -47,6 +49,8 @@ export const RecentApplications: React.FC<RecentApplicationsProps> = ({
       ctc: 'Rs. 9.5 LPA'
     }
   ];
+
+  const applications = (propApps && propApps.length > 0) ? propApps : defaultApplications;
 
   const renderLogo = (app: ApplicationItem) => {
     if (app.company === 'Google') {
