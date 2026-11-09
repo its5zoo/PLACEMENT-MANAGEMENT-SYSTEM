@@ -18,5 +18,12 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      // API payloads are intentionally polymorphic across the three portals.
+      '@typescript-eslint/no-explicit-any': 'off',
+      // These React Compiler rules flag safe one-time data-loading effects in this Vite app.
+      'react-hooks/immutability': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+    },
   },
 ])

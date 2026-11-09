@@ -39,17 +39,17 @@ export const PlacementDriveView: React.FC = () => {
       <div className="section-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <Calendar size={18} color="#2563eb" />
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#0f172a' }}>
+            <Calendar size={18} color="#2563EB" />
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#111827' }}>
               Campus Drive Schedule
             </h2>
           </div>
-          <p style={{ margin: 0, fontSize: '0.86rem', color: '#64748b' }}>
+          <p style={{ margin: 0, fontSize: '0.86rem', color: '#64748B' }}>
             Official dates, assessment venues, and interview rounds managed by the Training & Placement Cell.
           </p>
         </div>
 
-        <span style={{ backgroundColor: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', fontSize: '0.8rem', fontWeight: 700, padding: '4px 12px', borderRadius: '16px' }}>
+        <span style={{ backgroundColor: '#F1F5F9', color: '#2563EB', border: '1px solid #E2E8F0', fontSize: '0.8rem', fontWeight: 700, padding: '4px 12px', borderRadius: '16px' }}>
           3 Upcoming Sessions
         </span>
       </div>
@@ -60,13 +60,13 @@ export const PlacementDriveView: React.FC = () => {
           <div key={d.id} className="section-card" style={{ padding: '18px 22px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
               <div>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a' }}>{d.company}</h3>
-                <span style={{ fontSize: '0.84rem', color: '#2563eb', fontWeight: 600 }}>{d.round}</span>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#111827' }}>{d.company}</h3>
+                <span style={{ fontSize: '0.84rem', color: '#2563EB', fontWeight: 600 }}>{d.round}</span>
               </div>
               <StatusBadge status={d.status} />
             </div>
 
-            <div style={{ display: 'flex', gap: '20px', marginTop: '12px', fontSize: '0.82rem', color: '#64748b', flexWrap: 'wrap', borderTop: '1px solid #f8fafc', paddingTop: '10px' }}>
+            <div style={{ display: 'flex', gap: '20px', marginTop: '12px', fontSize: '0.82rem', color: '#64748B', flexWrap: 'wrap', borderTop: '1px solid #E2E8F0', paddingTop: '10px' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={14} /> {d.date}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><MapPin size={14} /> {d.venue}</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Users size={14} /> {d.eligibility}</span>

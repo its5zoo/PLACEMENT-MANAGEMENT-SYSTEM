@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface WelcomeBannerProps {
   onCheckMatches?: () => void;
@@ -16,30 +16,36 @@ export const WelcomeBanner: React.FC<WelcomeBannerProps> = ({ onCheckMatches }) 
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '6px',
-          backgroundColor: '#ecfdf5',
-          border: '1px solid #bbf7d0',
-          padding: '6px 12px',
-          borderRadius: '20px',
-          fontSize: '0.8rem',
-          fontWeight: 700,
-          color: '#15803d'
-        }}>
-          <ShieldCheck size={16} />
-          <span>TNP Verified • Drive Eligible</span>
-        </div>
-
         {onCheckMatches && (
           <button 
             className="btn-primary" 
             onClick={onCheckMatches}
-            style={{ fontSize: '0.82rem', padding: '7px 14px' }}
+            style={{
+              fontSize: '0.84rem',
+              padding: '9px 18px',
+              borderRadius: '9px',
+              background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
+              color: '#FFFFFF',
+              border: 'none',
+              fontWeight: 700,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.28)',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-1px)';
+              e.currentTarget.style.boxShadow = '0 6px 16px rgba(37, 99, 235, 0.38)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'none';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.28)';
+            }}
           >
             <span>Smart Matches</span>
-            <ArrowRight size={14} />
+            <ArrowRight size={15} />
           </button>
         )}
       </div>

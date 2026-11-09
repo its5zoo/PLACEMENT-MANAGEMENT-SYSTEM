@@ -88,7 +88,7 @@ export function App() {
       case 'readiness':
         return <ReadinessScoreView />;
       case 'job-listings':
-        return <JobListingsView />;
+        return <JobListingsView portalMode={portalMode} />;
       case 'my-applications':
         return <MyApplicationsView />;
       case 'documents':

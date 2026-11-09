@@ -15,12 +15,8 @@ import {
   Award,
   FileCheck,
   Gift,
-  HelpCircle,
-  Sliders,
-  History,
   Users,
-  PlusCircle,
-  Inbox
+  PlusCircle
 } from 'lucide-react';
 import type { ActiveTab, PortalMode } from '../../types';
 
@@ -66,15 +62,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   // TNP Portal Navigation
   const tnpItems: NavItem[] = [
-    { id: 'tnp-dashboard', label: 'TNP Overview', icon: LayoutGrid },
-    { id: 'tnp-requests', label: 'Company Requests', icon: Inbox, badge: 'Review' },
-    { id: 'job-listings', label: 'Active Campus Drives', icon: Briefcase },
-    { id: 'tnp-students', label: 'Student Directory', icon: Users },
+    { id: 'tnp-dashboard', label: 'Command Analytics', icon: LayoutGrid },
+    { id: 'tnp-requests', label: 'Drive Approvals', icon: Building2 },
+    { id: 'tnp-students', label: 'Student Directory', icon: User },
     { id: 'tnp-documents', label: 'Document Approvals', icon: FileCheck },
-    { id: 'tnp-cases', label: 'Placement Cases', icon: HelpCircle },
-    { id: 'companies', label: 'Recruiting Partners', icon: Building2 },
-    { id: 'tnp-policy', label: 'Policy Settings', icon: Sliders },
-    { id: 'tnp-audit', label: 'Audit Logs', icon: History },
+    { id: 'job-listings', label: 'Drive Operations', icon: Briefcase },
+    { id: 'tnp-cases', label: 'Resolution Cases', icon: MessageSquare },
+    { id: 'tnp-policy', label: 'Placement Policy', icon: Settings },
+    { id: 'tnp-audit', label: 'Audit Trail', icon: FileText },
   ];
 
   // Company Portal Navigation
@@ -91,19 +86,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
-      <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '20px 18px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '8px' }}>
+      <div 
+        className="sidebar-header" 
+        style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '12px', 
+          padding: '20px 18px', 
+          borderBottom: '1px solid var(--sidebar-border)', 
+          marginBottom: '6px' 
+        }}
+      >
         <div style={{
-          width: '38px',
-          height: '38px',
-          borderRadius: '10px',
-          backgroundColor: '#ffffff',
+          width: '40px',
+          height: '40px',
+          borderRadius: '12px',
+          backgroundColor: '#FFFFFF',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-          padding: '3px',
+          border: '1.5px solid #E2E8F0',
+          padding: '4px',
           overflow: 'hidden',
-          flexShrink: 0
+          flexShrink: 0,
+          boxShadow: '0 2px 6px rgba(15, 23, 42, 0.06)'
         }}>
           <img 
             src="/gietu_logo.png" 
@@ -112,10 +118,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           />
         </div>
         <div className="brand-info" style={{ display: 'flex', flexDirection: 'column' }}>
-          <span className="brand-title" style={{ fontSize: '0.95rem', fontWeight: 800, letterSpacing: '0.02em', color: '#ffffff' }}>
+          <span className="brand-title" style={{ fontSize: '0.98rem', fontWeight: 800, letterSpacing: '0.01em', color: 'var(--sidebar-title-color, #FFFFFF)' }}>
             GIET UNIVERSITY
           </span>
-          <span className="brand-subtitle" style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 500 }}>
+          <span className="brand-subtitle" style={{ fontSize: '0.72rem', color: 'var(--sidebar-subtitle-color, #94A3B8)', fontWeight: 600 }}>
             {portalMode === 'TNP' ? 'TNP Cell Admin' : portalMode === 'COMPANY' ? 'Corporate Recruiter' : 'Student Placement Portal'}
           </span>
         </div>
@@ -132,13 +138,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => setActiveTab(item.id as ActiveTab)}
             >
               <div className="nav-item-left">
-                <Icon size={19} />
+                <Icon size={18} />
                 <span>{item.label}</span>
               </div>
               {item.badge && (
-                <span className="badge-count" style={{
-                  backgroundColor: item.badge === 'New' ? '#2563eb' : item.badge === 'Review' ? '#d97706' : '#ef4444'
-                }}>
+                <span className="badge-count">
                   {item.badge}
                 </span>
               )}
@@ -147,13 +151,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
         })}
       </nav>
 
-      <div className="sidebar-footer">
+      <div className="sidebar-footer" style={{ padding: '12px 14px', borderTop: '1px solid var(--sidebar-border)' }}>
         <button
           className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
           onClick={() => setActiveTab('settings')}
         >
           <div className="nav-item-left">
-            <Settings size={19} />
+            <Settings size={18} />
             <span>Settings</span>
           </div>
         </button>
@@ -165,7 +169,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           }}
         >
           <div className="nav-item-left">
-            <LogOut size={19} />
+            <LogOut size={18} />
             <span>Logout</span>
           </div>
         </button>

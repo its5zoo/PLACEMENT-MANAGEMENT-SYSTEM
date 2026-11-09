@@ -8,11 +8,12 @@ import {
   getMyOffers,
   respondToOffer,
 } from '../controllers/studentPlacementController.js';
-import { protect } from '../middleware/authMiddleware.js';
+import { protect, authorize } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 router.use(protect);
+router.use(authorize('STUDENT'));
 
 router.get('/eligibility/:driveId', checkDriveEligibility);
 router.get('/eligibility/explain/:driveId', checkDriveEligibility);

@@ -54,6 +54,7 @@ const jobSchema = new mongoose.Schema(
       enum: ['active', 'closed'],
       default: 'active',
     },
+    isDeleted: { type: Boolean, default: false, index: true },
   },
   { timestamps: true }
 );

@@ -22,7 +22,7 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
     <div className="modal-backdrop" onClick={onClose} style={{
       position: 'fixed',
       top: 0, left: 0, right: 0, bottom: 0,
-      backgroundColor: 'rgba(15, 23, 42, 0.65)',
+      backgroundColor: 'rgba(15, 27, 51, 0.65)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -33,7 +33,8 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
         className="modal-content"
         onClick={(e) => e.stopPropagation()}
         style={{
-          backgroundColor: '#ffffff',
+          backgroundColor: '#FFFFFF',
+          border: '1px solid #E2E8F0',
           borderRadius: '16px',
           maxWidth: '560px',
           width: '100%',
@@ -44,20 +45,20 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
       >
         <div style={{
           padding: '20px 24px',
-          borderBottom: '1px solid #f1f5f9',
+          borderBottom: '1px solid #E2E8F0',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Award size={22} color="#2563eb" />
-            <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700, color: '#0f172a' }}>
+            <Award size={22} color="#2563EB" />
+            <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 700, color: '#111827' }}>
               Explainable Eligibility Evaluation
             </h3>
           </div>
           <button 
             onClick={onClose}
-            style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#64748b' }}
+            style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#64748B' }}
           >
             <X size={20} />
           </button>
@@ -68,20 +69,20 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
           <div style={{
             padding: '16px',
             borderRadius: '12px',
-            backgroundColor: isEligible ? '#f0fdf4' : '#fef2f2',
-            border: `1px solid ${isEligible ? '#bbf7d0' : '#fecaca'}`,
+            backgroundColor: '#F8FAFC',
+            border: '1px solid #E2E8F0',
             marginBottom: '20px',
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
           }}>
             {isEligible ? (
-              <CheckCircle size={28} color="#16a34a" />
+              <CheckCircle size={28} color="#15803D" />
             ) : (
-              <XCircle size={28} color="#dc2626" />
+              <XCircle size={28} color="#DC2626" />
             )}
             <div>
-              <div style={{ fontWeight: 700, fontSize: '1rem', color: isEligible ? '#15803d' : '#b91c1c' }}>
+              <div style={{ fontWeight: 700, fontSize: '1rem', color: isEligible ? '#15803D' : '#DC2626' }}>
                 {isEligible ? 'Eligible to Apply' : 'Not Eligible for this Drive'}
               </div>
               <div style={{ fontSize: '0.85rem', color: '#475569', marginTop: '2px' }}>
@@ -94,13 +95,13 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
           <div style={{ marginBottom: '20px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '0.85rem', fontWeight: 600 }}>
               <span style={{ color: '#475569' }}>Overall Profile Match</span>
-              <span style={{ color: '#2563eb' }}>{evaluation.matchPercentage}% Fit</span>
+              <span style={{ color: '#2563EB' }}>{evaluation.matchPercentage}% Fit</span>
             </div>
-            <div style={{ height: '8px', backgroundColor: '#e2e8f0', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ height: '8px', backgroundColor: '#E2E8F0', borderRadius: '4px', overflow: 'hidden' }}>
               <div style={{
                 height: '100%',
                 width: `${evaluation.matchPercentage}%`,
-                backgroundColor: isEligible ? '#16a34a' : '#f59e0b',
+                backgroundColor: isEligible ? '#15803D' : '#B45309',
                 transition: 'width 0.3s ease',
               }} />
             </div>
@@ -109,7 +110,7 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
           {/* Failed Checks (if any) */}
           {evaluation.failedChecks && evaluation.failedChecks.length > 0 && (
             <div style={{ marginBottom: '20px' }}>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#dc2626', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#DC2626', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <AlertTriangle size={16} />
                 Requirements Not Met ({evaluation.failedChecks.length})
               </h4>
@@ -118,10 +119,11 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
                   <div key={i} style={{
                     padding: '8px 12px',
                     borderRadius: '8px',
-                    backgroundColor: '#fff1f2',
+                    backgroundColor: '#F1F5F9',
+                    border: '1px solid #E2E8F0',
                     fontSize: '0.85rem',
-                    color: '#991b1b',
-                    borderLeft: '3px solid #dc2626',
+                    color: '#DC2626',
+                    borderLeft: '3px solid #DC2626',
                   }}>
                     {f}
                   </div>
@@ -133,14 +135,15 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
           {/* Missing Skills / Extras */}
           {evaluation.missingRequirements && evaluation.missingRequirements.length > 0 && (
             <div style={{ marginBottom: '20px' }}>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#d97706', marginBottom: '8px' }}>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#B45309', marginBottom: '8px' }}>
                 Skill Gaps / Missing Items
               </h4>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                 {evaluation.missingRequirements.map((m: string, i: number) => (
                   <span key={i} style={{
-                    backgroundColor: '#fef3c7',
-                    color: '#92400e',
+                    backgroundColor: '#F1F5F9',
+                    border: '1px solid #E2E8F0',
+                    color: '#B45309',
                     fontSize: '0.78rem',
                     padding: '4px 10px',
                     borderRadius: '6px',
@@ -156,7 +159,7 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
           {/* Passed Checks */}
           {evaluation.passedChecks && evaluation.passedChecks.length > 0 && (
             <div>
-              <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#16a34a', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#15803D', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <CheckCircle size={16} />
                 Passed Academic Criteria ({evaluation.passedChecks.length})
               </h4>
@@ -164,7 +167,7 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
                 {evaluation.passedChecks.map((p: string, i: number) => (
                   <div key={i} style={{
                     fontSize: '0.82rem',
-                    color: '#166534',
+                    color: '#15803D',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '6px',
@@ -180,8 +183,8 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
 
         <div style={{
           padding: '16px 24px',
-          backgroundColor: '#f8fafc',
-          borderTop: '1px solid #f1f5f9',
+          backgroundColor: '#F8FAFC',
+          borderTop: '1px solid #E2E8F0',
           display: 'flex',
           justifyContent: 'flex-end',
           gap: '12px',
@@ -190,7 +193,7 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
           <button 
             className="btn-primary"
             onClick={onClose}
-            style={{ backgroundColor: '#e2e8f0', color: '#334155' }}
+            style={{ backgroundColor: '#F1F5F9', border: '1px solid #E2E8F0', color: '#475569' }}
           >
             Close
           </button>
@@ -201,7 +204,7 @@ export const EligibilityModal: React.FC<EligibilityModalProps> = ({
                 onClose();
                 onApply();
               }}
-              style={{ backgroundColor: '#2563eb', color: '#ffffff' }}
+              style={{ backgroundColor: '#2563EB', color: '#FFFFFF' }}
             >
               Apply Now
             </button>

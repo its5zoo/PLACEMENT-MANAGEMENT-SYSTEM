@@ -9,7 +9,10 @@
     "seed": "npm --prefix backend run seed",
     "install:backend": "npm --prefix backend install",
     "install:frontend": "npm --prefix frontend install",
-    "install:all": "npm run install:backend && npm run install:frontend"
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "build": "npm --prefix frontend run build",
+    "lint": "npm --prefix frontend run lint",
+    "audit:db": "npm --prefix backend run audit:db"
   },
   "keywords": ["mern", "placement-management", "tnp", "react", "nodejs", "express", "mongodb"]
 }

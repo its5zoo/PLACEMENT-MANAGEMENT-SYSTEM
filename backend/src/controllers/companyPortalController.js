@@ -9,10 +9,33 @@ import { NotificationService } from '../services/NotificationService.js';
 // Helper to resolve company for authenticated company user
 const resolveCompany = async (user) => {
   if (user?.companyRef) {
-    return await Company.findById(user.companyRef);
+    const comp = await Company.findOne({ _id: user.companyRef, isDeleted: false });
+    if (comp) return comp;
   }
-  // Fallback to first company in database for seamless demo / test mode
-  return await Company.findOne();
+  // Fallback: match by email or name, or pick first available active company
+  let comp = await Company.findOne({
+    $or: [
+      { hrEmail: user?.email },
+      { name: { $regex: (user?.name || '').replace(/[\(\)]/g, ''), $options: 'i' } },
+    ],
+    isDeleted: false,
+  });
+  if (!comp) {
+    comp = await Company.findOne({ isDeleted: false });
+  }
+  if (!comp) {
+    comp = await Company.create({
+      name: 'Google India',
+      legalName: 'Google India Private Limited',
+      industry: 'Technology',
+      website: 'https://careers.google.com',
+      verificationStatus: 'VERIFIED',
+    });
+  }
+  if (user && comp) {
+    await User.findByIdAndUpdate(user._id, { companyRef: comp._id });
+  }
+  return comp;
 };
 
 // @desc    Get company dashboard statistics
@@ -21,23 +44,25 @@ export const getCompanyDashboard = async (req, res, next) => {
   try {
     const company = await resolveCompany(req.user);
     if (!company) {
-      return res.status(404).json({ success: false, message: 'Company record not found' });
+      return res.status(404).json({ success: false, message: 'Company record not found for this account' });
     }
-
-    const drives = await Drive.find({ company: company._id });
+    const drives = await Drive.find({ company: company._id, isDeleted: false });
     const driveIds = drives.map((d) => d._id);
 
-    const totalApplicants = await Application.countDocuments({ drive: { $in: driveIds } });
+    const totalApplicants = await Application.countDocuments({ drive: { $in: driveIds }, isDeleted: false });
     const shortlistedCount = await Application.countDocuments({
       drive: { $in: driveIds },
+      isDeleted: false,
       status: { $in: ['SHORTLISTED', 'ROUND_1', 'ROUND_2', 'ROUND_3', 'FINAL_INTERVIEW', 'SELECTED', 'OFFERED', 'ACCEPTED'] },
     });
     const interviewingCount = await Application.countDocuments({
       drive: { $in: driveIds },
+      isDeleted: false,
       status: { $in: ['ROUND_1', 'ROUND_2', 'ROUND_3', 'FINAL_INTERVIEW'] },
     });
     const selectedCount = await Application.countDocuments({
       drive: { $in: driveIds },
+      isDeleted: false,
       status: { $in: ['SELECTED', 'OFFERED', 'ACCEPTED'] },
     });
     const offersCount = await Offer.countDocuments({ company: company._id });
@@ -72,6 +97,9 @@ export const getCompanyDashboard = async (req, res, next) => {
 export const getCompanyProfile = async (req, res, next) => {
   try {
     const company = await resolveCompany(req.user);
+    if (!company) {
+      return res.status(404).json({ success: false, message: 'Company record not found for this account' });
+    }
     res.json({ success: true, data: company });
   } catch (err) {
     next(err);
@@ -82,12 +110,18 @@ export const getCompanyProfile = async (req, res, next) => {
 // @route   PUT /api/company/profile
 export const updateCompanyProfile = async (req, res, next) => {
   try {
-    let company = await resolveCompany(req.user);
+    const company = await resolveCompany(req.user);
     if (!company) {
-      company = new Company();
+      return res.status(404).json({ success: false, message: 'Company record not found for this account' });
     }
 
-    Object.assign(company, req.body);
+    const editableFields = [
+      'legalName', 'industry', 'description', 'website', 'headOffice', 'locations',
+      'logoText', 'logoBg', 'hrName', 'hrDesignation', 'hrEmail', 'hrContact',
+    ];
+    for (const field of editableFields) {
+      if (req.body[field] !== undefined) company[field] = req.body[field];
+    }
     company.verificationStatus = 'PROFILE_SUBMITTED';
     await company.save();
 
@@ -112,6 +146,9 @@ export const updateCompanyProfile = async (req, res, next) => {
 export const createCompanyDrive = async (req, res, next) => {
   try {
     const company = await resolveCompany(req.user);
+    if (!company) {
+      return res.status(404).json({ success: false, message: 'Company record not found for this account' });
+    }
     const {
       title,
       role,
@@ -189,12 +226,27 @@ export const createCompanyDrive = async (req, res, next) => {
 // @route   PUT /api/company/drives/:id/resubmit
 export const resubmitDrive = async (req, res, next) => {
   try {
-    const drive = await Drive.findById(req.params.id);
+    const company = await resolveCompany(req.user);
+    if (!company) {
+      return res.status(404).json({ success: false, message: 'Company record not found for this account' });
+    }
+    const drive = await Drive.findOne({ _id: req.params.id, company: company._id, isDeleted: false });
     if (!drive) {
       return res.status(404).json({ success: false, message: 'Drive not found' });
     }
 
-    Object.assign(drive, req.body, { status: 'SUBMITTED' });
+    if (!['DRAFT', 'NEEDS_CORRECTION'].includes(drive.status)) {
+      return res.status(409).json({ success: false, message: 'Only draft or correction-requested drives can be submitted' });
+    }
+    const editableFields = [
+      'title', 'role', 'ctc', 'baseSalary', 'variablePay', 'location', 'workMode',
+      'employmentType', 'applicationDeadline', 'description', 'responsibilities',
+      'eligibility', 'rounds', 'requiredDocuments',
+    ];
+    for (const field of editableFields) {
+      if (req.body[field] !== undefined) drive[field] = req.body[field];
+    }
+    drive.status = 'SUBMITTED';
     drive.criteriaVersion = (drive.criteriaVersion || 1) + 1;
     await drive.save();
 
@@ -213,31 +265,63 @@ export const resubmitDrive = async (req, res, next) => {
   }
 };
 
-// @desc    Get applicants for a company drive
+// @desc    Get applicants for a company drive (or all company drives)
 // @route   GET /api/company/drives/:id/applicants
 export const getDriveApplicants = async (req, res, next) => {
   try {
-    const drive = await Drive.findById(req.params.id);
-    if (!drive) {
-      return res.status(404).json({ success: false, message: 'Drive not found' });
+    const company = await resolveCompany(req.user);
+    if (!company) {
+      return res.status(404).json({ success: false, message: 'Company record not found for this account' });
     }
 
     const { status } = req.query;
-    let query = { drive: drive._id };
+    let drive = null;
+    let query = { isDeleted: false };
+
+    if (req.params.id && req.params.id !== 'all') {
+      drive = await Drive.findOne({ _id: req.params.id, company: company._id, isDeleted: false });
+      if (drive) {
+        query.drive = drive._id;
+      } else {
+        query.company = company._id;
+      }
+    } else {
+      const companyDrives = await Drive.find({ company: company._id, isDeleted: false });
+      const driveIds = companyDrives.map(d => d._id);
+      query.$or = [{ drive: { $in: driveIds } }, { company: company._id }];
+    }
+
     if (status && status !== 'ALL') {
       query.status = status;
     }
 
     const applicants = await Application.find(query)
-      .populate('student', 'name email phone studentDetails')
+      .populate('student', 'name email phone avatar location studentDetails')
+      .populate('drive', 'role title companyName ctc location eligibility')
       .sort({ createdAt: -1 });
 
     res.json({
       success: true,
       count: applicants.length,
-      drive,
+      drive: drive || (applicants[0]?.drive || null),
       data: applicants,
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Get complete student profile for company review
+// @route   GET /api/company/students/:id
+export const getStudentProfileForCompany = async (req, res, next) => {
+  try {
+    const student = await User.findById(req.params.id)
+      .select('-password')
+      .lean();
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Student profile not found' });
+    }
+    res.json({ success: true, data: student });
   } catch (err) {
     next(err);
   }
@@ -247,9 +331,20 @@ export const getDriveApplicants = async (req, res, next) => {
 // @route   PUT /api/company/applications/:id/shortlist
 export const shortlistApplicant = async (req, res, next) => {
   try {
-    const application = await Application.findById(req.params.id);
+    const company = await resolveCompany(req.user);
+    if (!company) {
+      return res.status(404).json({ success: false, message: 'Company record not found for this account' });
+    }
+    const application = await Application.findOne({ _id: req.params.id, isDeleted: false })
+      .populate('drive', 'company');
     if (!application) {
       return res.status(404).json({ success: false, message: 'Application not found' });
+    }
+    if (!application.drive || String(application.drive.company) !== String(company._id)) {
+      return res.status(403).json({ success: false, message: 'Application does not belong to your company' });
+    }
+    if (!['APPLIED', 'UNDER_REVIEW'].includes(application.status)) {
+      return res.status(409).json({ success: false, message: 'Only new or under-review applications can be shortlisted' });
     }
 
     application.status = 'SHORTLISTED';
@@ -276,14 +371,27 @@ export const releaseOffer = async (req, res, next) => {
   try {
     const { studentId, driveId, ctc, baseSalary, joiningDate, location, role } = req.body;
     const company = await resolveCompany(req.user);
+    if (!company) {
+      return res.status(404).json({ success: false, message: 'Company record not found for this account' });
+    }
+    const [drive, application] = await Promise.all([
+      Drive.findOne({ _id: driveId, company: company._id, isDeleted: false }),
+      Application.findOne({ student: studentId, drive: driveId, isDeleted: false }),
+    ]);
+    if (!drive || !application) {
+      return res.status(404).json({ success: false, message: 'Drive or candidate application not found for your company' });
+    }
+    if (!['SHORTLISTED', 'FINAL_INTERVIEW', 'SELECTED'].includes(application.status)) {
+      return res.status(409).json({ success: false, message: 'Candidate must be shortlisted or selected before an offer is released' });
+    }
 
     const offer = await Offer.create({
       student: studentId,
       drive: driveId,
       company: company._id,
       companyName: company.name,
-      role: role || 'Software Engineer',
-      ctc: ctc || '12 LPA',
+      role: role || drive.role,
+      ctc: ctc || drive.ctc,
       baseSalary: baseSalary || '10 LPA',
       location: location || 'Bengaluru',
       joiningDate: joiningDate || 'July 2027',
@@ -291,10 +399,9 @@ export const releaseOffer = async (req, res, next) => {
     });
 
     // Update application status to OFFERED
-    await Application.findOneAndUpdate(
-      { student: studentId, drive: driveId },
-      { status: 'OFFERED', remarks: `Offer released: ${ctc}` }
-    );
+    application.status = 'OFFERED';
+    application.remarks = `Offer released: ${offer.ctc}`;
+    await application.save();
 
     // Update student status
     await User.findByIdAndUpdate(studentId, {
@@ -303,7 +410,7 @@ export const releaseOffer = async (req, res, next) => {
 
     await NotificationService.send({
       title: `🎉 Offer Letter Released: ${company.name}`,
-      message: `${company.name} has released a formal placement offer for ${role} with CTC ${ctc}!`,
+      message: `${company.name} has released a formal placement offer for ${offer.role} with CTC ${offer.ctc}!`,
       recipient: studentId,
       type: 'PERSONAL',
       priority: 'URGENT',

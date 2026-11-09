@@ -45,6 +45,8 @@ cd backend && npm run dev
 ```
 Backend runs on **http://localhost:5000** (API base: `http://localhost:5000/api`).
 
+The server now waits for MongoDB before accepting requests. `JWT_SECRET` and `MONGODB_URI` are required. Header-based demo role switching is disabled unless `ALLOW_DEMO_AUTH=true` is explicitly set in a non-production environment.
+
 ### 4. Start Frontend
 In a separate terminal:
 ```bash
@@ -53,6 +55,21 @@ npm run client
 cd frontend && npm run dev
 ```
 Frontend runs on **http://localhost:5173**.
+
+For a separately hosted backend, set `VITE_API_BASE_URL` to the API base URL before building the frontend.
+
+### 5. Verify the Project
+
+```bash
+cd frontend
+npm run build
+npm run lint
+
+cd ../backend
+npm run audit:db
+```
+
+See [AUDIT_REPORT.md](./AUDIT_REPORT.md) for the full defect, remediation, CRUD, security, and verification report.
 
 ---
 

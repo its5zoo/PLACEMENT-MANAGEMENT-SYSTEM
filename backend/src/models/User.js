@@ -45,30 +45,30 @@ const userSchema = new mongoose.Schema(
     },
     // Comprehensive student details
     studentDetails: {
-      rollNumber: { type: String, default: '231CS001', index: true },
-      rollNo: { type: String, default: '231CS001' },
-      institutionEmail: { type: String, default: '231CS001.faizaan@giet.edu' },
-      personalEmail: { type: String, default: 'faizaan@gmail.com' },
-      department: { type: String, default: 'Computer Science' },
-      branch: { type: String, default: 'CSE' },
-      program: { type: String, default: 'B.Tech' },
-      semester: { type: Number, default: 8 },
-      batch: { type: String, default: '2023-2027' },
-      graduationYear: { type: Number, default: 2027 },
-      section: { type: String, default: 'A' },
+      rollNumber: { type: String, default: '', index: true },
+      rollNo: { type: String, default: '' },
+      institutionEmail: { type: String, default: '' },
+      personalEmail: { type: String, default: '' },
+      department: { type: String, default: '' },
+      branch: { type: String, default: '' },
+      program: { type: String, default: '' },
+      semester: { type: Number, default: 0 },
+      batch: { type: String, default: '' },
+      graduationYear: { type: Number, default: null },
+      section: { type: String, default: '' },
       // Academic records (Institution Controlled)
-      cgpa: { type: Number, default: 8.85 },
-      tenthPercentage: { type: Number, default: 94.0 },
-      twelfthPercentage: { type: Number, default: 92.4 },
+      cgpa: { type: Number, default: null },
+      tenthPercentage: { type: Number, default: null },
+      twelfthPercentage: { type: Number, default: null },
       diplomaPercentage: { type: Number, default: null },
       backlogs: { type: Number, default: 0 },
       activeBacklogs: { type: Number, default: 0 },
-      attendancePercentage: { type: Number, default: 87.5 },
+      attendancePercentage: { type: Number, default: 0 },
       // Placement workflow attributes
       placementStatus: {
         type: String,
         enum: ['UNPLACED', 'IN_PROCESS', 'SELECTED', 'OFFER_RECEIVED', 'OFFER_ACCEPTED', 'PLACED', 'WITHDRAWN'],
-        default: 'IN_PROCESS',
+        default: 'UNPLACED',
       },
       placementCount: { type: Number, default: 0 },
       currentOffer: {
@@ -80,7 +80,7 @@ const userSchema = new mongoose.Schema(
       // Student-editable profile fields
       skills: {
         type: [String],
-        default: ['React.js', 'Node.js', 'TypeScript', 'Java', 'Python', 'SQL', 'Git', 'Data Structures', 'Tailwind CSS'],
+        default: [],
       },
       certifications: [
         {
@@ -97,12 +97,12 @@ const userSchema = new mongoose.Schema(
           link: String,
         },
       ],
-      resumeUrl: { type: String, default: '/sample-resume.pdf' },
-      resumeVerified: { type: Boolean, default: true },
-      githubUrl: { type: String, default: 'https://github.com/faizaan' },
-      linkedinUrl: { type: String, default: 'https://linkedin.com/in/faizaan' },
+      resumeUrl: { type: String, default: '' },
+      resumeVerified: { type: Boolean, default: false },
+      githubUrl: { type: String, default: '' },
+      linkedinUrl: { type: String, default: '' },
       portfolioUrl: { type: String, default: '' },
-      profileCompletionPercent: { type: Number, default: 85 },
+      profileCompletionPercent: { type: Number, default: 0 },
     },
     // Audit info
     isActive: { type: Boolean, default: true },

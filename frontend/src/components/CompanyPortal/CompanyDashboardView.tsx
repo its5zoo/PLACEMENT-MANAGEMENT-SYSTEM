@@ -31,7 +31,7 @@ export const CompanyDashboardView: React.FC<CompanyDashboardProps> = ({ setActiv
 
   if (loading) {
     return (
-      <div className="view-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '350px', color: '#64748b' }}>
+      <div className="view-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '350px', color: '#64748B' }}>
         <Loader2 size={24} style={{ marginRight: '8px', animation: 'spin 1s linear infinite' }} />
         <span>Loading corporate recruitment portal...</span>
       </div>
@@ -50,30 +50,31 @@ export const CompanyDashboardView: React.FC<CompanyDashboardProps> = ({ setActiv
         alignItems: 'center',
         flexWrap: 'wrap',
         gap: '16px',
-        backgroundColor: '#ffffff',
-        borderLeft: '5px solid #2563eb',
+        backgroundColor: '#FFFFFF',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div style={{
             width: '56px', height: '56px', borderRadius: '14px',
-            backgroundColor: company.logoBg || '#eff6ff',
+            backgroundColor: '#F8FAFC',
+            border: '1px solid #E2E8F0',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '1.4rem', fontWeight: 800, color: '#2563eb',
+            fontSize: '1.4rem', fontWeight: 800, color: '#111827',
           }}>
             {company.logoText || 'CO'}
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, color: '#0f172a' }}>{company.name}</h2>
+              <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, color: '#111827' }}>{company.name}</h2>
               <span style={{
-                backgroundColor: company.verificationStatus === 'VERIFIED' ? '#dcfce7' : '#fef3c7',
-                color: company.verificationStatus === 'VERIFIED' ? '#15803d' : '#b45309',
+                backgroundColor: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                color: company.verificationStatus === 'VERIFIED' ? '#15803D' : '#475569',
                 padding: '3px 10px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700,
               }}>
                 {company.verificationStatus === 'VERIFIED' ? '✓ Verified Partner' : 'Verification Under Review'}
               </span>
             </div>
-            <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: '#64748b' }}>
+            <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: '#64748B' }}>
               HR Lead: {company.hrName || 'Campus Talent Acquisition'} ({company.hrEmail || 'recruitment@company.com'})
             </p>
           </div>
@@ -109,7 +110,7 @@ export const CompanyDashboardView: React.FC<CompanyDashboardProps> = ({ setActiv
               <span className="stat-number">{metrics.totalApplicants || 0}</span>
             </div>
           </div>
-          <span style={{ fontSize: '0.75rem', color: '#2563eb' }}>Review &gt;</span>
+          <span style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>Review &gt;</span>
         </div>
 
         <div className="stat-card" onClick={() => setActiveTab('company-applicants')} style={{ cursor: 'pointer' }}>
@@ -135,20 +136,20 @@ export const CompanyDashboardView: React.FC<CompanyDashboardProps> = ({ setActiv
 
       {/* Active Drives Table */}
       <div className="section-card" style={{ marginTop: '20px', padding: '0', overflow: 'hidden' }}>
-        <div style={{ padding: '20px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700 }}>Campus Placement Drives</h3>
-          <span style={{ fontSize: '0.85rem', color: '#64748b' }}>{drives.length} drives registered</span>
+        <div style={{ padding: '20px 24px', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: '#111827' }}>Campus Placement Drives</h3>
+          <span style={{ fontSize: '0.85rem', color: '#64748B' }}>{drives.length} drives registered</span>
         </div>
 
         {drives.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
+          <div style={{ textAlign: 'center', padding: '40px', color: '#64748B' }}>
             No placement drives posted yet.
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
               <thead>
-                <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0', color: '#64748b', fontSize: '0.78rem', textTransform: 'uppercase' }}>
+                <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '1px solid #E2E8F0', color: '#64748B', fontSize: '0.78rem', textTransform: 'uppercase' }}>
                   <th style={{ padding: '14px 20px' }}>Role / Designation</th>
                   <th style={{ padding: '14px 20px' }}>Package (CTC)</th>
                   <th style={{ padding: '14px 20px' }}>TNP Status</th>
@@ -158,24 +159,24 @@ export const CompanyDashboardView: React.FC<CompanyDashboardProps> = ({ setActiv
               </thead>
               <tbody>
                 {drives.map((d: any) => (
-                  <tr key={d._id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                    <td style={{ padding: '16px 20px', fontWeight: 700, color: '#0f172a' }}>{d.role}</td>
-                    <td style={{ padding: '16px 20px', fontWeight: 700, color: '#16a34a' }}>{d.ctc}</td>
+                  <tr key={d._id} style={{ borderBottom: '1px solid #E2E8F0' }}>
+                    <td style={{ padding: '16px 20px', fontWeight: 700, color: '#111827' }}>{d.role}</td>
+                    <td style={{ padding: '16px 20px', fontWeight: 700, color: '#111827' }}>{d.ctc}</td>
                     <td style={{ padding: '16px 20px' }}>
                       <span style={{
                         padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700,
-                        backgroundColor: d.status === 'APPLICATIONS_OPEN' || d.status === 'APPROVED' ? '#dcfce7' : d.status === 'NEEDS_CORRECTION' ? '#fef3c7' : '#dbeafe',
-                        color: d.status === 'APPLICATIONS_OPEN' || d.status === 'APPROVED' ? '#15803d' : d.status === 'NEEDS_CORRECTION' ? '#b45309' : '#1e40af',
+                        backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0',
+                        color: d.status === 'APPLICATIONS_OPEN' || d.status === 'APPROVED' ? '#15803D' : '#475569',
                       }}>
                         {d.status}
                       </span>
                     </td>
-                    <td style={{ padding: '16px 20px', color: '#64748b' }}>
+                    <td style={{ padding: '16px 20px', color: '#64748B' }}>
                       {new Date(d.applicationDeadline).toLocaleDateString('en-GB')}
                     </td>
                     <td style={{ padding: '16px 20px' }}>
                       <button 
-                        className="btn-primary"
+                        className="btn-secondary"
                         onClick={() => setActiveTab('company-applicants')}
                         style={{ padding: '6px 12px', fontSize: '0.8rem' }}
                       >

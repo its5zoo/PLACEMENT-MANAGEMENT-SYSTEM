@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 
 export const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/tnp_database');
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`❌ MongoDB Connection Error: ${error.message}`);
-    process.exit(1);
+  const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
+  if (!uri) {
+    throw new Error('Database configuration missing: set MONGODB_URI');
   }
+
+  const conn = await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000 });
+  console.log(`✅ MongoDB Connected: ${conn.connection.host}/${conn.connection.name}`);
+  return conn;
 };

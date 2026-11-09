@@ -35,17 +35,42 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           setStats(res.data.stats);
         }
         if (res.data.recentApplications) {
-          const mapped = res.data.recentApplications.map((app: any) => ({
-            id: app._id,
-            company: app.company,
-            role: app.role,
-            status: app.status,
-            date: app.appliedDate || new Date(app.createdAt).toLocaleDateString('en-GB'),
-            logo: app.logo || app.company.slice(0, 2).toUpperCase(),
-            logoBg: app.logoBg || '#ffffff',
-            location: app.location || 'India',
-            ctc: app.ctc || 'Competitive',
-          }));
+          const isHexId = (val: any) => typeof val === 'string' && /^[0-9a-fA-F]{24}$/.test(val);
+          const mapped = res.data.recentApplications.map((app: any) => {
+            let compName = 'Campus Recruiter';
+            if (app.companyName && !isHexId(app.companyName)) {
+              compName = app.companyName;
+            } else if (app.company?.name && !isHexId(app.company.name)) {
+              compName = app.company.name;
+            } else if (typeof app.company === 'string' && !isHexId(app.company)) {
+              compName = app.company;
+            } else if (app.drive?.companyName && !isHexId(app.drive.companyName)) {
+              compName = app.drive.companyName;
+            } else if (app.logo === 'MS') {
+              compName = 'Microsoft Corporation';
+            } else if (app.logo === 'G') {
+              compName = 'Google India';
+            } else if (app.logo === 'AMZ') {
+              compName = 'Amazon Web Services';
+            }
+
+            let logo = app.logo;
+            if (!logo || (typeof logo === 'string' && /^[0-9a-fA-F]{2}$/.test(logo))) {
+              logo = compName.slice(0, 2).toUpperCase();
+            }
+
+            return {
+              id: app._id,
+              company: compName,
+              role: app.role,
+              status: app.status,
+              date: app.appliedDate || new Date(app.createdAt).toLocaleDateString('en-GB'),
+              logo: logo,
+              logoBg: app.logoBg || '#ffffff',
+              location: app.location || 'India',
+              ctc: app.ctc || 'Competitive',
+            };
+          });
           setRecentApps(mapped);
         }
       }

@@ -10,7 +10,7 @@ export const SettingsView: React.FC = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px', color: '#475569' }}>Email Notifications</label>
-              <select style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0', outline: 'none' }}>
+              <select style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0', color: '#111827', outline: 'none' }}>
                 <option>All drive updates & interview alerts</option>
                 <option>Only interview shortlists</option>
                 <option>Mute email notifications</option>
@@ -18,11 +18,11 @@ export const SettingsView: React.FC = () => {
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px', color: '#475569' }}>Phone Number (WhatsApp Alerts)</label>
-              <input type="text" defaultValue="+91 98765 43210" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0', outline: 'none' }} />
+              <input type="text" defaultValue="+91 98765 43210" style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0', color: '#111827', outline: 'none' }} />
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px', color: '#475569' }}>Profile Visibility</label>
-              <select style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0', outline: 'none' }}>
+              <select style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0', color: '#111827', outline: 'none' }}>
                 <option>Visible to all registered campus recruiters</option>
                 <option>Only shortlisting companies</option>
               </select>

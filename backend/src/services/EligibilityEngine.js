@@ -38,7 +38,7 @@ export class EligibilityEngine {
 
     // 3. Attendance Percentage Check
     const minAttendance = criteria.minAttendance ?? 75.0;
-    const studentAttendance = Number(studentAcademics.attendancePercentage ?? 85.0);
+    const studentAttendance = Number(studentAcademics.attendancePercentage ?? 0);
     scoreWeight += 15;
     if (studentAttendance >= minAttendance) {
       passedChecks.push(`Attendance: ${studentAttendance.toFixed(1)}% meets minimum requirement of ${minAttendance.toFixed(1)}%`);
@@ -58,30 +58,34 @@ export class EligibilityEngine {
       failedChecks.push(`Branch: ${studentBranch} is not in eligible branches (${allowedBranches.join(', ')})`);
     }
 
-    // 5. 10th & 12th Percentage Checks
-    const min10th = criteria.min10thPercentage ?? 60.0;
-    const student10th = Number(studentAcademics.tenthPercentage ?? 75.0);
-    if (student10th < min10th) {
-      failedChecks.push(`10th Grade Percentage: ${student10th}% (Required: ${min10th}%)`);
-    } else {
-      passedChecks.push(`10th Grade: ${student10th}% >= ${min10th}%`);
+    // 5. 10th & 12th Percentage Checks (Check if student has record and criteria exists)
+    if (criteria.min10thPercentage && studentAcademics.tenthPercentage != null && Number(studentAcademics.tenthPercentage) > 0) {
+      const min10th = criteria.min10thPercentage;
+      const student10th = Number(studentAcademics.tenthPercentage);
+      if (student10th < min10th) {
+        failedChecks.push(`10th Grade Percentage: ${student10th}% (Required: ${min10th}%)`);
+      } else {
+        passedChecks.push(`10th Grade: ${student10th}% >= ${min10th}%`);
+      }
     }
 
-    const min12th = criteria.min12thPercentage ?? 60.0;
-    const student12th = Number(studentAcademics.twelfthPercentage ?? 75.0);
-    if (student12th < min12th) {
-      failedChecks.push(`12th Grade Percentage: ${student12th}% (Required: ${min12th}%)`);
-    } else {
-      passedChecks.push(`12th Grade: ${student12th}% >= ${min12th}%`);
+    if (criteria.min12thPercentage && studentAcademics.twelfthPercentage != null && Number(studentAcademics.twelfthPercentage) > 0) {
+      const min12th = criteria.min12thPercentage;
+      const student12th = Number(studentAcademics.twelfthPercentage);
+      if (student12th < min12th) {
+        failedChecks.push(`12th Grade Percentage: ${student12th}% (Required: ${min12th}%)`);
+      } else {
+        passedChecks.push(`12th Grade: ${student12th}% >= ${min12th}%`);
+      }
     }
 
     // 6. Graduation Year Check
     const allowedGradYears = criteria.allowedGraduationYears || [];
-    const studentGradYear = Number(studentAcademics.graduationYear ?? 2027);
-    if (allowedGradYears.length > 0 && !allowedGradYears.includes(studentGradYear)) {
+    const studentGradYear = Number(studentAcademics.graduationYear ?? 0);
+    if (allowedGradYears.length > 0 && studentGradYear > 0 && !allowedGradYears.includes(studentGradYear)) {
       failedChecks.push(`Graduation Year: Batch ${studentGradYear} is not eligible (Required: ${allowedGradYears.join(', ')})`);
-    } else {
-      passedChecks.push(`Batch Year: ${studentGradYear} is eligible`);
+    } else if (allowedGradYears.length > 0) {
+      passedChecks.push(`Batch Year: ${studentGradYear || 'Current'} is eligible`);
     }
 
     // 7. Skills Match
@@ -97,7 +101,7 @@ export class EligibilityEngine {
           matchedSkills.push(req);
           skillScore += 20 / requiredSkills.length;
         } else {
-          missingRequirements.push(`Missing Required Skill: ${req}`);
+          missingRequirements.push(`Missing Preferred Skill: ${req}`);
         }
       });
       scoreAchieved += skillScore;

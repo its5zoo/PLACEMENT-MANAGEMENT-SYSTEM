@@ -1,4 +1,5 @@
-const API_BASE = '/api';
+const configuredApiBase = import.meta.env.VITE_API_BASE_URL?.trim();
+const API_BASE = (configuredApiBase || '/api').replace(/\/$/, '');
 
 // Current active role for seamless multi-portal demonstration (STUDENT | TNP | COMPANY)
 let currentActingRole: string = localStorage.getItem('tnp_acting_role') || 'STUDENT';
@@ -69,7 +70,7 @@ export const api = {
     if (userStr) {
       try {
         return JSON.parse(userStr);
-      } catch (e) {
+      } catch {
         return null;
       }
     }
@@ -130,7 +131,7 @@ export const api = {
     return res.json();
   },
 
-  async updateProfile(profileData: any) {
+  async updateProfile(profileData: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/auth/profile`, {
       method: 'PUT',
       headers: getHeaders(),
@@ -190,7 +191,7 @@ export const api = {
     return res.json();
   },
 
-  async uploadDocument(data: any) {
+  async uploadDocument(data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/student/documents`, {
       method: 'POST',
       headers: getHeaders(),
@@ -254,7 +255,7 @@ export const api = {
     return res.json();
   },
 
-  async updateStudentAcademics(studentId: string, data: any) {
+  async updateStudentAcademics(studentId: string, data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/tnp/students/${studentId}/academics`, {
       method: 'PUT',
       headers: getHeaders(),
@@ -287,7 +288,7 @@ export const api = {
     return res.json();
   },
 
-  async updatePlacementCase(caseId: string, data: any) {
+  async updatePlacementCase(caseId: string, data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/tnp/cases/${caseId}`, {
       method: 'PUT',
       headers: getHeaders(),
@@ -297,7 +298,7 @@ export const api = {
     return res.json();
   },
 
-  async createAnnouncement(data: any) {
+  async createAnnouncement(data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/tnp/announcements`, {
       method: 'POST',
       headers: getHeaders(),
@@ -319,7 +320,7 @@ export const api = {
     return res.json();
   },
 
-  async updatePolicy(data: any) {
+  async updatePolicy(data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/tnp/policy`, {
       method: 'PUT',
       headers: getHeaders(),
@@ -344,7 +345,7 @@ export const api = {
     return res.json();
   },
 
-  async updateCompanyProfile(data: any) {
+  async updateCompanyProfile(data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/company/profile`, {
       method: 'PUT',
       headers: getHeaders(),
@@ -354,7 +355,7 @@ export const api = {
     return res.json();
   },
 
-  async createCompanyDrive(data: any) {
+  async createCompanyDrive(data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/company/drives`, {
       method: 'POST',
       headers: getHeaders(),
@@ -365,13 +366,15 @@ export const api = {
     return json;
   },
 
-  async resubmitDrive(id: string, data: any) {
+  async resubmitDrive(id: string, data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/company/drives/${id}/resubmit`, {
       method: 'PUT',
       headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    return res.json();
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.message || 'Failed to resubmit drive');
+    return json;
   },
 
   async getDriveApplicants(driveId: string, status = 'ALL') {
@@ -380,15 +383,23 @@ export const api = {
     return res.json();
   },
 
+  async getCompanyStudentProfile(studentId: string) {
+    const res = await fetch(`${API_BASE}/company/students/${studentId}`, { headers: getHeaders() });
+    if (!res.ok) throw new Error('Failed to fetch student profile');
+    return res.json();
+  },
+
   async shortlistApplicant(applicationId: string) {
     const res = await fetch(`${API_BASE}/company/applications/${applicationId}/shortlist`, {
       method: 'PUT',
       headers: getHeaders(),
     });
-    return res.json();
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.message || 'Failed to shortlist applicant');
+    return json;
   },
 
-  async releaseOffer(data: any) {
+  async releaseOffer(data: Record<string, unknown>) {
     const res = await fetch(`${API_BASE}/company/offers/release`, {
       method: 'POST',
       headers: getHeaders(),

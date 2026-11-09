@@ -113,7 +113,7 @@ export const getTnpDashboard = async (req, res, next) => {
 export const getCompanyRequests = async (req, res, next) => {
   try {
     const { status } = req.query;
-    let query = {};
+    let query = { isDeleted: false };
     if (status && status !== 'ALL') {
       query.status = status;
     }
@@ -133,6 +133,10 @@ export const getCompanyRequests = async (req, res, next) => {
 export const reviewDriveRequest = async (req, res, next) => {
   try {
     const { decision, rejectionReason, correctionComments, internalTnpNotes } = req.body;
+    const allowedDecisions = ['APPROVE', 'DECLINE', 'NEEDS_CORRECTION', 'PUBLISH'];
+    if (!allowedDecisions.includes(decision)) {
+      return res.status(400).json({ success: false, message: 'Invalid drive review decision' });
+    }
     const drive = await Drive.findById(req.params.id);
 
     if (!drive) {
@@ -240,7 +244,7 @@ export const getStudentsList = async (req, res, next) => {
 export const updateStudentAcademics = async (req, res, next) => {
   try {
     const student = await User.findById(req.params.id);
-    if (!student) {
+    if (!student || String(student.role).toUpperCase() !== 'STUDENT' || student.isDeleted) {
       return res.status(404).json({ success: false, message: 'Student not found' });
     }
 
@@ -299,6 +303,9 @@ export const getDocumentRequests = async (req, res, next) => {
 export const verifyDocument = async (req, res, next) => {
   try {
     const { status, rejectionReason } = req.body;
+    if (!['VERIFIED', 'REJECTED', 'REPLACEMENT_REQUIRED'].includes(status)) {
+      return res.status(400).json({ success: false, message: 'Invalid document verification status' });
+    }
     const document = await Document.findById(req.params.id);
 
     if (!document) {
@@ -454,7 +461,17 @@ export const updatePolicy = async (req, res, next) => {
       policy = new PlacementPolicy();
     }
 
-    Object.assign(policy, req.body, { updatedBy: req.user._id });
+    const editableFields = [
+      'institutionName', 'institutionDomain', 'minCgpaForPlacement',
+      'minAttendanceForPlacement', 'maxActiveBacklogsAllowed',
+      'allowMultipleApplications', 'allowMultipleOffers', 'allowOfferUpgrade',
+      'minPackageMultiplierForUpgrade', 'placementFreezeOnAcceptance',
+      'companyVerificationRequired', 'mandatoryDocuments',
+    ];
+    for (const field of editableFields) {
+      if (req.body[field] !== undefined) policy[field] = req.body[field];
+    }
+    policy.updatedBy = req.user._id;
     await policy.save();
 
     await AuditService.log({

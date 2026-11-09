@@ -45,7 +45,7 @@ export const OffersView: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="view-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px', color: '#64748b' }}>
+      <div className="view-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px', color: '#64748B' }}>
         <Loader2 size={24} style={{ marginRight: '8px', animation: 'spin 1s linear infinite' }} />
         <span>Fetching placement offers...</span>
       </div>
@@ -56,20 +56,20 @@ export const OffersView: React.FC = () => {
     <div className="view-container">
       <div className="section-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Gift size={22} color="#16a34a" />
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', margin: '0 0 6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Gift size={22} color="#0F1B33" />
             Campus Placement Offers
           </h2>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b' }}>
+          <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748B' }}>
             Official offers released by recruiting companies verified through the Training & Placement Cell.
           </p>
         </div>
       </div>
 
       {offers.length === 0 ? (
-        <div className="section-card" style={{ textAlign: 'center', padding: '48px', color: '#64748b' }}>
-          <Gift size={36} color="#94a3b8" style={{ margin: '0 auto 12px auto' }} />
-          <h3 style={{ fontSize: '1.1rem', color: '#334155', margin: '0 0 6px 0' }}>No Formal Offers Released Yet</h3>
+        <div className="section-card" style={{ textAlign: 'center', padding: '48px', color: '#64748B' }}>
+          <Gift size={36} color="#94A3B8" style={{ margin: '0 auto 12px auto' }} />
+          <h3 style={{ fontSize: '1.1rem', color: '#111827', margin: '0 0 6px 0' }}>No Formal Offers Released Yet</h3>
           <p style={{ fontSize: '0.85rem', margin: 0 }}>
             Once you clear final rounds with recruiting companies, formal offer letters with compensation breakdown will appear here.
           </p>
@@ -82,14 +82,11 @@ export const OffersView: React.FC = () => {
             const isReleased = offer.status === 'RELEASED' || offer.status === 'VIEWED';
 
             return (
-              <div key={offer._id} className="section-card" style={{
-                padding: '24px',
-                borderLeft: `5px solid ${isAccepted ? '#16a34a' : isDeclined ? '#ef4444' : '#2563eb'}`,
-              }}>
+              <div key={offer._id} className="section-card" style={{ padding: '24px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#0f172a' }}>
+                      <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#111827' }}>
                         {offer.role}
                       </h3>
                       <span style={{
@@ -97,13 +94,14 @@ export const OffersView: React.FC = () => {
                         borderRadius: '20px',
                         fontSize: '0.78rem',
                         fontWeight: 700,
-                        backgroundColor: isAccepted ? '#dcfce7' : isDeclined ? '#fee2e2' : '#dbeafe',
-                        color: isAccepted ? '#15803d' : isDeclined ? '#b91c1c' : '#1e40af',
+                        backgroundColor: '#F8FAFC',
+                        border: '1px solid #E2E8F0',
+                        color: isAccepted ? '#15803D' : isDeclined ? '#DC2626' : '#0F1B33',
                       }}>
                         {offer.status}
                       </span>
                     </div>
-                    <div style={{ fontSize: '1rem', fontWeight: 600, color: '#2563eb', marginTop: '4px' }}>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 600, color: '#475569', marginTop: '4px' }}>
                       {offer.companyName}
                     </div>
                   </div>
@@ -111,10 +109,10 @@ export const OffersView: React.FC = () => {
                   {isReleased && (
                     <div style={{ display: 'flex', gap: '10px' }}>
                       <button 
-                        className="btn-primary"
+                        className="btn-secondary"
                         onClick={() => handleRespond(offer._id, 'DECLINE')}
                         disabled={actionInProgress === offer._id}
-                        style={{ backgroundColor: '#fee2e2', color: '#b91c1c', border: '1px solid #fecaca' }}
+                        style={{ color: '#DC2626' }}
                       >
                         <XCircle size={16} />
                         <span>Decline Offer</span>
@@ -123,7 +121,6 @@ export const OffersView: React.FC = () => {
                         className="btn-primary"
                         onClick={() => handleRespond(offer._id, 'ACCEPT')}
                         disabled={actionInProgress === offer._id}
-                        style={{ backgroundColor: '#16a34a' }}
                       >
                         <CheckCircle size={16} />
                         <span>Accept Offer</span>
@@ -133,8 +130,8 @@ export const OffersView: React.FC = () => {
                 </div>
 
                 <div style={{ display: 'flex', gap: '24px', margin: '20px 0 12px 0', fontSize: '0.9rem', color: '#475569', flexWrap: 'wrap' }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, color: '#0f172a' }}>
-                    <DollarSign size={16} color="#16a34a" /> CTC: {offer.ctc}
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, color: '#111827' }}>
+                    <DollarSign size={16} color="#0F1B33" /> CTC: {offer.ctc}
                   </span>
                   {offer.baseSalary && (
                     <span>Base Pay: <strong>{offer.baseSalary}</strong></span>
@@ -148,7 +145,7 @@ export const OffersView: React.FC = () => {
                 </div>
 
                 {isAccepted && (
-                  <div style={{ backgroundColor: '#f0fdf4', padding: '12px', borderRadius: '8px', border: '1px solid #bbf7d0', fontSize: '0.85rem', color: '#166534', marginTop: '12px' }}>
+                  <div style={{ backgroundColor: '#F1F5F9', padding: '12px', borderRadius: '8px', border: '1px solid #E2E8F0', fontSize: '0.85rem', color: '#15803D', marginTop: '12px' }}>
                     ✓ <strong>Accepted by Candidate:</strong> Formal offer accepted on {new Date(offer.responseDate || offer.updatedAt).toLocaleDateString('en-GB')}. Institutional placement records have been verified.
                   </div>
                 )}

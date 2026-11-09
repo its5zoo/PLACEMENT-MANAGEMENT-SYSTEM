@@ -81,9 +81,9 @@ export const CompanyRequestsView: React.FC = () => {
               style={{
                 padding: '8px 14px',
                 borderRadius: '8px',
-                border: 'none',
-                backgroundColor: filter === st ? '#2563eb' : '#f1f5f9',
-                color: filter === st ? '#ffffff' : '#475569',
+                border: `1px solid ${filter === st ? '#0F1B33' : '#E2E8F0'}`,
+                backgroundColor: filter === st ? '#0F1B33' : '#FFFFFF',
+                color: filter === st ? '#FFFFFF' : '#475569',
                 fontWeight: 600,
                 fontSize: '0.82rem',
                 cursor: 'pointer',
@@ -98,19 +98,19 @@ export const CompanyRequestsView: React.FC = () => {
       {/* Requests Table */}
       <div className="section-card" style={{ padding: '0', overflow: 'hidden' }}>
         {loading ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', color: '#64748b' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', color: '#64748B' }}>
             <Loader2 size={24} style={{ marginRight: '8px', animation: 'spin 1s linear infinite' }} />
             <span>Fetching company placement requests...</span>
           </div>
         ) : requests.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
+          <div style={{ textAlign: 'center', padding: '40px', color: '#64748B' }}>
             No company drive requests in this filter category.
           </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
               <thead>
-                <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0', color: '#64748b', fontSize: '0.78rem', textTransform: 'uppercase' }}>
+                <tr style={{ backgroundColor: '#F8FAFC', borderBottom: '1px solid #E2E8F0', color: '#64748B', fontSize: '0.78rem', textTransform: 'uppercase' }}>
                   <th style={{ padding: '14px 20px' }}>Company & Role</th>
                   <th style={{ padding: '14px 20px' }}>Offered Package (CTC)</th>
                   <th style={{ padding: '14px 20px' }}>Min CGPA</th>
@@ -121,31 +121,32 @@ export const CompanyRequestsView: React.FC = () => {
               </thead>
               <tbody>
                 {requests.map((r: any) => (
-                  <tr key={r._id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <tr key={r._id} style={{ borderBottom: '1px solid #E2E8F0' }}>
                     <td style={{ padding: '16px 20px' }}>
-                      <div style={{ fontWeight: 700, color: '#0f172a' }}>{r.companyName}</div>
-                      <div style={{ fontSize: '0.8rem', color: '#64748b' }}>{r.role}</div>
+                      <div style={{ fontWeight: 700, color: '#111827' }}>{r.companyName}</div>
+                      <div style={{ fontSize: '0.8rem', color: '#64748B' }}>{r.role}</div>
                     </td>
-                    <td style={{ padding: '16px 20px', fontWeight: 700, color: '#16a34a' }}>{r.ctc}</td>
-                    <td style={{ padding: '16px 20px', color: '#334155' }}>{r.eligibility?.minCgpa || 7.0}</td>
+                    <td style={{ padding: '16px 20px', fontWeight: 700, color: '#111827' }}>{r.ctc}</td>
+                    <td style={{ padding: '16px 20px', color: '#475569' }}>{r.eligibility?.minCgpa || 7.0}</td>
                     <td style={{ padding: '16px 20px' }}>
                       <span style={{
                         padding: '4px 10px',
                         borderRadius: '20px',
                         fontSize: '0.75rem',
-                        fontWeight: 700,
-                        backgroundColor: r.status === 'APPROVED' || r.status === 'APPLICATIONS_OPEN' ? '#dcfce7' : r.status === 'NEEDS_CORRECTION' ? '#fef3c7' : r.status === 'CANCELLED' ? '#fee2e2' : '#dbeafe',
-                        color: r.status === 'APPROVED' || r.status === 'APPLICATIONS_OPEN' ? '#15803d' : r.status === 'NEEDS_CORRECTION' ? '#b45309' : r.status === 'CANCELLED' ? '#b91c1c' : '#1e40af',
+                        fontWeight: 600,
+                        backgroundColor: '#F8FAFC',
+                        border: '1px solid #E2E8F0',
+                        color: r.status === 'APPROVED' || r.status === 'APPLICATIONS_OPEN' ? '#15803D' : r.status === 'NEEDS_CORRECTION' ? '#B45309' : r.status === 'CANCELLED' ? '#DC2626' : '#475569',
                       }}>
                         {r.status}
                       </span>
                     </td>
-                    <td style={{ padding: '16px 20px', color: '#64748b' }}>
+                    <td style={{ padding: '16px 20px', color: '#64748B' }}>
                       {new Date(r.createdAt).toLocaleDateString('en-GB')}
                     </td>
                     <td style={{ padding: '16px 20px' }}>
                       <button 
-                        className="btn-primary"
+                        className="btn-secondary"
                         onClick={() => handleOpenReview(r)}
                         style={{ padding: '6px 12px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}
                       >
@@ -165,40 +166,40 @@ export const CompanyRequestsView: React.FC = () => {
       {selectedDrive && (
         <div className="modal-backdrop" onClick={() => setSelectedDrive(null)} style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(15, 23, 42, 0.65)',
+          backgroundColor: 'rgba(15, 27, 51, 0.65)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '16px',
         }}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{
-            backgroundColor: '#ffffff', borderRadius: '16px', maxWidth: '780px', width: '100%', maxHeight: '90vh', overflowY: 'auto',
+            backgroundColor: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '16px', maxWidth: '780px', width: '100%', maxHeight: '90vh', overflowY: 'auto',
           }}>
-            <div style={{ padding: '20px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ padding: '20px 24px', borderBottom: '1px solid #E2E8F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800 }}>TNP Institutional Drive Review</h3>
-                <span style={{ fontSize: '0.85rem', color: '#64748b' }}>{selectedDrive.companyName} — {selectedDrive.role}</span>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#111827' }}>TNP Institutional Drive Review</h3>
+                <span style={{ fontSize: '0.85rem', color: '#64748B' }}>{selectedDrive.companyName} — {selectedDrive.role}</span>
               </div>
-              <button onClick={() => setSelectedDrive(null)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '1.2rem', color: '#64748b' }}>✕</button>
+              <button onClick={() => setSelectedDrive(null)} style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '1.2rem', color: '#64748B' }}>✕</button>
             </div>
 
             <div style={{ padding: '24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
               {/* Left Side: Drive Criteria & Details */}
               <div>
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', marginBottom: '12px' }}>Drive Specifications</h4>
-                <div style={{ backgroundColor: '#f8fafc', padding: '16px', borderRadius: '10px', fontSize: '0.85rem', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div><strong>Offered CTC:</strong> {selectedDrive.ctc}</div>
-                  <div><strong>Base Pay:</strong> {selectedDrive.baseSalary || 'N/A'}</div>
-                  <div><strong>Location:</strong> {selectedDrive.location}</div>
-                  <div><strong>Work Mode:</strong> {selectedDrive.workMode || 'On-site'}</div>
-                  <div><strong>Application Deadline:</strong> {new Date(selectedDrive.applicationDeadline).toLocaleDateString('en-GB')}</div>
-                  <div><strong>Minimum CGPA:</strong> {selectedDrive.eligibility?.minCgpa || 7.0}</div>
-                  <div><strong>Allowed Branches:</strong> {(selectedDrive.eligibility?.allowedBranches || []).join(', ')}</div>
-                  <div><strong>Max Active Backlogs:</strong> {selectedDrive.eligibility?.maxActiveBacklogs ?? 0}</div>
+                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#111827', marginBottom: '12px' }}>Drive Specifications</h4>
+                <div style={{ backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', padding: '16px', borderRadius: '10px', fontSize: '0.85rem', color: '#475569', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div><strong style={{ color: '#111827' }}>Offered CTC:</strong> {selectedDrive.ctc}</div>
+                  <div><strong style={{ color: '#111827' }}>Base Pay:</strong> {selectedDrive.baseSalary || 'N/A'}</div>
+                  <div><strong style={{ color: '#111827' }}>Location:</strong> {selectedDrive.location}</div>
+                  <div><strong style={{ color: '#111827' }}>Work Mode:</strong> {selectedDrive.workMode || 'On-site'}</div>
+                  <div><strong style={{ color: '#111827' }}>Application Deadline:</strong> {new Date(selectedDrive.applicationDeadline).toLocaleDateString('en-GB')}</div>
+                  <div><strong style={{ color: '#111827' }}>Minimum CGPA:</strong> {selectedDrive.eligibility?.minCgpa || 7.0}</div>
+                  <div><strong style={{ color: '#111827' }}>Allowed Branches:</strong> {(selectedDrive.eligibility?.allowedBranches || []).join(', ')}</div>
+                  <div><strong style={{ color: '#111827' }}>Max Active Backlogs:</strong> {selectedDrive.eligibility?.maxActiveBacklogs ?? 0}</div>
                 </div>
 
-                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', margin: '16px 0 8px 0' }}>Selection Rounds</h4>
+                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#111827', margin: '16px 0 8px 0' }}>Selection Rounds</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem' }}>
                   {(selectedDrive.rounds || []).map((rnd: any, i: number) => (
-                    <div key={i} style={{ padding: '8px 12px', backgroundColor: '#f1f5f9', borderRadius: '6px' }}>
-                      <strong>Round {rnd.roundIndex || i + 1}:</strong> {rnd.name} ({rnd.type})
+                    <div key={i} style={{ padding: '8px 12px', backgroundColor: '#F1F5F9', border: '1px solid #E2E8F0', borderRadius: '6px', color: '#475569' }}>
+                      <strong style={{ color: '#111827' }}>Round {rnd.roundIndex || i + 1}:</strong> {rnd.name} ({rnd.type})
                     </div>
                   ))}
                 </div>
@@ -207,7 +208,7 @@ export const CompanyRequestsView: React.FC = () => {
               {/* Right Side: TNP Decision Form */}
               <form onSubmit={handleSubmitDecision} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#334155', marginBottom: '8px' }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#475569', marginBottom: '8px' }}>
                     TNP Decision
                   </label>
                   <div style={{ display: 'flex', gap: '8px' }}>
@@ -215,9 +216,9 @@ export const CompanyRequestsView: React.FC = () => {
                       type="button"
                       onClick={() => setDecision('APPROVE')}
                       style={{
-                        flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #bbf7d0',
-                        backgroundColor: decision === 'APPROVE' ? '#dcfce7' : '#ffffff',
-                        color: '#15803d', fontWeight: 700, cursor: 'pointer',
+                        flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0',
+                        backgroundColor: decision === 'APPROVE' ? '#F1F5F9' : '#FFFFFF',
+                        color: '#15803D', fontWeight: 700, cursor: 'pointer',
                       }}
                     >
                       ✓ Approve
@@ -226,9 +227,9 @@ export const CompanyRequestsView: React.FC = () => {
                       type="button"
                       onClick={() => setDecision('NEEDS_CORRECTION')}
                       style={{
-                        flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #fde68a',
-                        backgroundColor: decision === 'NEEDS_CORRECTION' ? '#fef3c7' : '#ffffff',
-                        color: '#b45309', fontWeight: 700, cursor: 'pointer',
+                        flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0',
+                        backgroundColor: decision === 'NEEDS_CORRECTION' ? '#F1F5F9' : '#FFFFFF',
+                        color: '#B45309', fontWeight: 700, cursor: 'pointer',
                       }}
                     >
                       ✏ Needs Changes
@@ -237,9 +238,9 @@ export const CompanyRequestsView: React.FC = () => {
                       type="button"
                       onClick={() => setDecision('DECLINE')}
                       style={{
-                        flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #fecaca',
-                        backgroundColor: decision === 'DECLINE' ? '#fee2e2' : '#ffffff',
-                        color: '#b91c1c', fontWeight: 700, cursor: 'pointer',
+                        flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0',
+                        backgroundColor: decision === 'DECLINE' ? '#F1F5F9' : '#FFFFFF',
+                        color: '#DC2626', fontWeight: 700, cursor: 'pointer',
                       }}
                     >
                       ✕ Decline
@@ -249,7 +250,7 @@ export const CompanyRequestsView: React.FC = () => {
 
                 {decision !== 'APPROVE' && (
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#dc2626', marginBottom: '6px' }}>
+                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#DC2626', marginBottom: '6px' }}>
                       {decision === 'DECLINE' ? 'Mandatory Rejection Reason' : 'Required Corrections for Company'}
                     </label>
                     <textarea 
@@ -258,13 +259,13 @@ export const CompanyRequestsView: React.FC = () => {
                       value={reason}
                       onChange={(e) => setReason(e.target.value)}
                       required
-                      style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                      style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0', fontSize: '0.85rem' }}
                     />
                   </div>
                 )}
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#475569', marginBottom: '6px' }}>
                     Private TNP Internal Notes (Hidden from Company & Students)
                   </label>
                   <textarea 
@@ -272,15 +273,15 @@ export const CompanyRequestsView: React.FC = () => {
                     placeholder="Internal verification checklist, background check notes..."
                     value={internalNotes}
                     onChange={(e) => setInternalNotes(e.target.value)}
-                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
+                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0', fontSize: '0.85rem' }}
                   />
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: 'auto' }}>
-                  <button type="button" onClick={() => setSelectedDrive(null)} className="btn-primary" style={{ backgroundColor: '#e2e8f0', color: '#334155' }}>
+                  <button type="button" onClick={() => setSelectedDrive(null)} className="btn-primary" style={{ backgroundColor: '#F1F5F9', border: '1px solid #E2E8F0', color: '#475569' }}>
                     Cancel
                   </button>
-                  <button type="submit" disabled={submitting} className="btn-primary" style={{ backgroundColor: '#2563eb' }}>
+                  <button type="submit" disabled={submitting} className="btn-primary" style={{ backgroundColor: '#2563EB' }}>
                     {submitting ? 'Recording...' : `Submit Decision (${decision})`}
                   </button>
                 </div>

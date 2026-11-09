@@ -55,11 +55,11 @@ export const CreateDriveView: React.FC<CreateDriveProps> = ({ setActiveTab }) =>
     <div className="view-container">
       <div className="section-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <PlusCircle size={22} color="#2563eb" />
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', margin: '0 0 6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <PlusCircle size={22} color="#2563EB" />
             Create Campus Placement Drive
           </h2>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b' }}>
+          <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748B' }}>
             Define hiring requirements, academic eligibility thresholds, and multi-stage selection rounds for university review.
           </p>
         </div>
@@ -69,45 +69,45 @@ export const CreateDriveView: React.FC<CreateDriveProps> = ({ setActiveTab }) =>
         <form onSubmit={(e) => { e.preventDefault(); handleSubmit(true); }} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Basic Info */}
           <div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', marginBottom: '14px' }}>1. Role & Compensation</h3>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#111827', marginBottom: '14px' }}>1. Role & Compensation</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>Job Role / Title</label>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Job Role / Title</label>
                 <input 
                   type="text" value={role} onChange={(e) => setRole(e.target.value)} required
-                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0' }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>Package (Total CTC)</label>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Package (Total CTC)</label>
                 <input 
                   type="text" value={ctc} onChange={(e) => setCtc(e.target.value)} required
-                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0' }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>Base Salary</label>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Base Salary</label>
                 <input 
                   type="text" value={baseSalary} onChange={(e) => setBaseSalary(e.target.value)}
-                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0' }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>Work Location</label>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Work Location</label>
                 <input 
                   type="text" value={location} onChange={(e) => setLocation(e.target.value)} required
-                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0' }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>Work Mode</label>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Work Mode</label>
                 <select 
                   value={workMode} onChange={(e) => setWorkMode(e.target.value)}
-                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0', color: '#111827' }}
                 >
                   <option value="Hybrid">Hybrid</option>
                   <option value="On-site">On-site</option>
@@ -118,38 +118,38 @@ export const CreateDriveView: React.FC<CreateDriveProps> = ({ setActiveTab }) =>
           </div>
 
           {/* Eligibility Criteria */}
-          <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '20px' }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', marginBottom: '14px' }}>2. Deterministic Eligibility Thresholds</h3>
+          <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '20px' }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#111827', marginBottom: '14px' }}>2. Deterministic Eligibility Thresholds</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>Minimum Cutoff CGPA</label>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Minimum Cutoff CGPA</label>
                 <input 
                   type="number" step="0.1" value={minCgpa} onChange={(e) => setMinCgpa(e.target.value)} required
-                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0' }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>Max Active Backlogs Allowed</label>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Max Active Backlogs Allowed</label>
                 <input 
                   type="number" value={maxBacklogs} onChange={(e) => setMaxBacklogs(e.target.value)} required
-                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0' }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>Minimum Attendance Required (%)</label>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Minimum Attendance Required (%)</label>
                 <input 
                   type="number" value={minAttendance} onChange={(e) => setMinAttendance(e.target.value)} required
-                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0' }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '4px' }}>Eligible Branches (comma separated)</label>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#475569', marginBottom: '4px' }}>Eligible Branches (comma separated)</label>
                 <input 
                   type="text" value={branches} onChange={(e) => setBranches(e.target.value)} required
-                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                  style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0' }}
                 />
               </div>
             </div>
@@ -161,7 +161,7 @@ export const CreateDriveView: React.FC<CreateDriveProps> = ({ setActiveTab }) =>
               onClick={() => handleSubmit(false)} 
               disabled={submitting} 
               className="btn-primary" 
-              style={{ backgroundColor: '#f1f5f9', color: '#334155' }}
+              style={{ backgroundColor: '#F1F5F9', border: '1px solid #E2E8F0', color: '#475569' }}
             >
               Save as Draft
             </button>

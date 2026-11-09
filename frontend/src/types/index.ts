@@ -59,6 +59,7 @@ export interface JobListing {
   tags: string[];
   eligibility?: any;
   status?: string;
+  description?: string;
 }
 
 export interface Company {

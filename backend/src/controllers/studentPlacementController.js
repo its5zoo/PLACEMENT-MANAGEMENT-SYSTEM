@@ -60,7 +60,10 @@ export const getRecommendations = async (req, res, next) => {
 export const getReadinessScore = async (req, res, next) => {
   try {
     const student = await User.findById(req.user._id);
-    const documents = await Document.find({ owner: student._id });
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Student not found' });
+    }
+    const documents = await Document.find({ owner: student._id, isDeleted: false });
 
     const readiness = ReadinessScoreService.calculate(student, documents);
     res.json({ success: true, data: readiness });
@@ -73,7 +76,7 @@ export const getReadinessScore = async (req, res, next) => {
 // @route   GET /api/student/documents
 export const getMyDocuments = async (req, res, next) => {
   try {
-    const documents = await Document.find({ owner: req.user._id }).sort({ createdAt: -1 });
+    const documents = await Document.find({ owner: req.user._id, isDeleted: false }).sort({ createdAt: -1 });
     res.json({ success: true, count: documents.length, data: documents });
   } catch (err) {
     next(err);
@@ -84,7 +87,7 @@ export const getMyDocuments = async (req, res, next) => {
 // @route   POST /api/student/documents
 export const uploadDocument = async (req, res, next) => {
   try {
-    const { title, type, fileUrl, fileName, fileSize } = req.body;
+    const { title, type, fileUrl, fileName, fileSize, mimeType } = req.body;
 
     const doc = await Document.create({
       owner: req.user._id,
@@ -93,6 +96,7 @@ export const uploadDocument = async (req, res, next) => {
       fileUrl: fileUrl || '/sample-document.pdf',
       fileName: fileName || `${type}.pdf`,
       fileSize: fileSize || '1.5 MB',
+      mimeType: mimeType || (fileUrl?.startsWith('data:image') ? 'image/png' : 'application/pdf'),
       status: 'UNDER_REVIEW',
     });
 
@@ -116,7 +120,7 @@ export const uploadDocument = async (req, res, next) => {
 // @route   GET /api/student/offers
 export const getMyOffers = async (req, res, next) => {
   try {
-    const offers = await Offer.find({ student: req.user._id }).sort({ createdAt: -1 });
+    const offers = await Offer.find({ student: req.user._id, isDeleted: false }).sort({ createdAt: -1 });
     res.json({ success: true, count: offers.length, data: offers });
   } catch (err) {
     next(err);
@@ -132,6 +136,13 @@ export const respondToOffer = async (req, res, next) => {
 
     if (!offer) {
       return res.status(404).json({ success: false, message: 'Offer not found' });
+    }
+
+    if (!['ACCEPT', 'DECLINE'].includes(action)) {
+      return res.status(400).json({ success: false, message: 'Action must be ACCEPT or DECLINE' });
+    }
+    if (!['RELEASED', 'VIEWED'].includes(offer.status)) {
+      return res.status(409).json({ success: false, message: 'This offer has already been responded to' });
     }
 
     if (action === 'ACCEPT') {

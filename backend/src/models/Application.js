@@ -21,10 +21,14 @@ const applicationSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+    job: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Job',
+      index: true,
+    },
     drive: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Drive',
-      required: true,
       index: true,
     },
     company: {
@@ -85,7 +89,21 @@ const applicationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Prevent duplicate applications
-applicationSchema.index({ student: 1, drive: 1 }, { unique: true });
+applicationSchema.pre('validate', function (next) {
+  if (!this.job && !this.drive) {
+    return next(new Error('An application must reference a job or a drive'));
+  }
+  next();
+});
+
+// Prevent duplicate applications while supporting both legacy jobs and placement drives.
+applicationSchema.index(
+  { student: 1, drive: 1 },
+  { unique: true, partialFilterExpression: { drive: { $type: 'objectId' } } }
+);
+applicationSchema.index(
+  { student: 1, job: 1 },
+  { unique: true, partialFilterExpression: { job: { $type: 'objectId' } } }
+);
 
 export const Application = mongoose.model('Application', applicationSchema);

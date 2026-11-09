@@ -7,29 +7,41 @@ export const protect = async (req, res, next) => {
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
       token = req.headers.authorization.split(' ')[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'super_secret_jwt_key_tnp_placement_2025');
-      req.user = await User.findById(decoded.id).select('-password');
+      if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET is not configured');
+      }
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = await User.findOne({
+        _id: decoded.id,
+        isActive: true,
+        isDeleted: false,
+      }).select('-password');
       if (req.user) return next();
     } catch (error) {
       return res.status(401).json({ success: false, message: 'Not authorized, token failed' });
     }
   }
 
-  // Development convenience: Check x-acting-role header
+  // Explicitly opt-in demo authentication; never permit header impersonation in production.
+  const demoAuthEnabled = process.env.NODE_ENV !== 'production' && process.env.ALLOW_DEMO_AUTH === 'true';
+  if (!demoAuthEnabled) {
+    return res.status(401).json({ success: false, message: 'Not authorized, no token' });
+  }
+
   const actingRole = req.headers['x-acting-role'] ? String(req.headers['x-acting-role']).toUpperCase() : null;
 
   try {
-    let query = {};
+    let query = { isActive: true, isDeleted: false };
     if (actingRole) {
       if (actingRole === 'TNP' || actingRole === 'TNP_ADMIN') {
-        query = { role: { $in: ['TNP', 'TNP_ADMIN', 'tpo', 'admin'] } };
+        query.role = { $in: ['TNP', 'TNP_ADMIN', 'tpo', 'admin'] };
       } else if (actingRole === 'COMPANY') {
-        query = { role: { $in: ['COMPANY', 'recruiter'] } };
+        query.role = { $in: ['COMPANY', 'recruiter'] };
       } else {
-        query = { role: { $in: ['STUDENT', 'student'] } };
+        query.role = { $in: ['STUDENT', 'student'] };
       }
     } else {
-      query = { role: { $in: ['STUDENT', 'student'] } };
+      query.role = { $in: ['STUDENT', 'student'] };
     }
 
     const defaultUser = await User.findOne(query).select('-password');
@@ -38,7 +50,7 @@ export const protect = async (req, res, next) => {
       return next();
     }
   } catch (err) {
-    // proceed
+    return next(err);
   }
 
   return res.status(401).json({ success: false, message: 'Not authorized, no token' });
@@ -62,6 +74,8 @@ export const authorize = (...roles) => {
     const effectiveRoles = [userRole];
     if (userRole === 'TPO') effectiveRoles.push('TNP');
     if (userRole === 'ADMIN') effectiveRoles.push('TNP', 'TNP_ADMIN');
+    if (userRole === 'TNP') effectiveRoles.push('TPO');
+    if (userRole === 'TNP_ADMIN') effectiveRoles.push('TNP', 'TPO', 'ADMIN');
 
     const hasPermission = normalizedRoles.some((r) => effectiveRoles.includes(r));
     if (!hasPermission) {

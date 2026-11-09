@@ -1,8 +1,26 @@
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User.js';
 
+const editableStudentFields = [
+  'personalEmail',
+  'skills',
+  'certifications',
+  'projects',
+  'resumeUrl',
+  'githubUrl',
+  'linkedinUrl',
+  'portfolioUrl',
+];
+
+const pickEditableStudentDetails = (studentDetails = {}) => Object.fromEntries(
+  Object.entries(studentDetails).filter(([key]) => editableStudentFields.includes(key))
+);
+
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET || 'super_secret_jwt_key_tnp_placement_2025', {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not configured');
+  }
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: '30d',
   });
 };
@@ -11,7 +29,14 @@ const generateToken = (id) => {
 // @route   POST /api/auth/register
 export const registerUser = async (req, res, next) => {
   try {
-    const { name, email, password, role, studentDetails, phone, location } = req.body;
+    const { name, email, password, studentDetails, phone, location } = req.body;
+
+    if (!name?.trim() || !email?.trim() || !password || password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, a valid email, and a password of at least 6 characters are required',
+      });
+    }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -22,10 +47,10 @@ export const registerUser = async (req, res, next) => {
       name,
       email,
       password,
-      role: role || 'student',
+      role: 'STUDENT',
       phone,
       location,
-      studentDetails: studentDetails || {},
+      studentDetails: pickEditableStudentDetails(studentDetails),
     });
 
     res.status(201).json({
@@ -53,7 +78,7 @@ export const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, isActive: true, isDeleted: false });
     if (user && (await user.matchPassword(password))) {
       res.json({
         success: true,
@@ -106,9 +131,10 @@ export const updateProfile = async (req, res, next) => {
     user.avatar = req.body.avatar || user.avatar;
 
     if (req.body.studentDetails) {
+      const safeStudentDetails = pickEditableStudentDetails(req.body.studentDetails);
       user.studentDetails = {
         ...user.studentDetails.toObject(),
-        ...req.body.studentDetails,
+        ...safeStudentDetails,
       };
     }
 

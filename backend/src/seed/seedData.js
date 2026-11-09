@@ -11,6 +11,7 @@ import { Announcement } from '../models/Announcement.js';
 import { AuditLog } from '../models/AuditLog.js';
 import { PlacementPolicy } from '../models/PlacementPolicy.js';
 import { Notification } from '../models/Notification.js';
+import { Job } from '../models/Job.js';
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ const seed = async () => {
   try {
     const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/tnp_database';
     await mongoose.connect(mongoUri);
-    console.log(`Connected to MongoDB for comprehensive institutional seeding at ${mongoUri}`);
+    console.log(`Connected to MongoDB for comprehensive institutional seeding at ${mongoose.connection.host}/${mongoose.connection.name}`);
 
     // Clear existing collections
     await User.deleteMany();
@@ -32,6 +33,7 @@ const seed = async () => {
     await AuditLog.deleteMany();
     await PlacementPolicy.deleteMany();
     await Notification.deleteMany();
+    await Job.deleteMany();
 
     console.log('Cleared existing collections...');
 
@@ -398,6 +400,29 @@ const seed = async () => {
       },
     ]);
     console.log('Created Drives...');
+
+    // Keep the legacy jobs listing API in sync with placement drives.
+    await Job.create(drives.map((drive) => ({
+      company: drive.companyName,
+      companyRef: drive.company,
+      role: drive.role,
+      location: drive.location,
+      ctc: drive.ctc,
+      deadline: drive.applicationDeadline.toLocaleDateString('en-GB', {
+        day: '2-digit', month: 'short', year: 'numeric',
+      }),
+      logoBg: drive.logoBg,
+      logoText: drive.logoText,
+      tags: drive.eligibility.requiredSkills,
+      description: drive.description,
+      eligibility: {
+        minCgpa: drive.eligibility.minCgpa,
+        allowedBranches: drive.eligibility.allowedBranches,
+        backlogsAllowed: drive.eligibility.maxActiveBacklogs,
+      },
+      status: ['APPROVED', 'PUBLISHED', 'APPLICATIONS_OPEN'].includes(drive.status) ? 'active' : 'closed',
+    })));
+    console.log('Created Jobs...');
 
     // 5. Create Applications for Faizaan
     await Application.create([

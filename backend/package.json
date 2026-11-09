@@ -7,7 +7,11 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "seed": "node src/seed/seedData.js"
+    "seed": "node src/seed/seedData.js",
+    "audit:db": "node scripts/auditDatabase.js",
+    "db:sync-indexes": "node scripts/syncIndexes.js",
+    "db:repair-legacy": "node scripts/repairLegacyData.js",
+    "smoke:api": "node scripts/smokeApi.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

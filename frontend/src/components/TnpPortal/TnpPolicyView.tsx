@@ -59,11 +59,11 @@ export const TnpPolicyView: React.FC = () => {
     <div className="view-container">
       <div className="section-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Sliders size={22} color="#2563eb" />
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', margin: '0 0 6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Sliders size={22} color="#2563EB" />
             Institutional Placement Policy Configuration
           </h2>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b' }}>
+          <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748B' }}>
             Configure university rules for eligibility thresholds, offer freeze mechanisms, and dream-company upgrade allowances.
           </p>
         </div>
@@ -73,7 +73,7 @@ export const TnpPolicyView: React.FC = () => {
         <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 700, color: '#1e293b', marginBottom: '6px' }}>
+              <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 700, color: '#111827', marginBottom: '6px' }}>
                 Minimum Institutional CGPA for Placement
               </label>
               <input 
@@ -81,13 +81,13 @@ export const TnpPolicyView: React.FC = () => {
                 value={policy.minCgpaForPlacement || 6.5}
                 onChange={(e) => setPolicy({ ...policy, minCgpaForPlacement: Number(e.target.value) })}
                 required
-                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0' }}
               />
-              <span style={{ fontSize: '0.78rem', color: '#64748b' }}>Students below this cutoff cannot register for campus drives.</span>
+              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>Students below this cutoff cannot register for campus drives.</span>
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 700, color: '#1e293b', marginBottom: '6px' }}>
+              <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 700, color: '#111827', marginBottom: '6px' }}>
                 Minimum Attendance Percentage Required (%)
               </label>
               <input 
@@ -95,14 +95,14 @@ export const TnpPolicyView: React.FC = () => {
                 value={policy.minAttendanceForPlacement || 75}
                 onChange={(e) => setPolicy({ ...policy, minAttendanceForPlacement: Number(e.target.value) })}
                 required
-                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #E2E8F0' }}
               />
-              <span style={{ fontSize: '0.78rem', color: '#64748b' }}>Mandatory academic attendance verified across semesters.</span>
+              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>Mandatory academic attendance verified across semesters.</span>
             </div>
           </div>
 
-          <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <h4 style={{ margin: '0 0 4px 0', fontSize: '1rem', fontWeight: 700, color: '#0f172a' }}>Offer Lock & Upgrade Policy</h4>
+          <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <h4 style={{ margin: '0 0 4px 0', fontSize: '1rem', fontWeight: 700, color: '#111827' }}>Offer Lock & Upgrade Policy</h4>
 
             <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
               <input 
@@ -111,8 +111,8 @@ export const TnpPolicyView: React.FC = () => {
                 onChange={(e) => setPolicy({ ...policy, placementFreezeOnAcceptance: e.target.checked })}
                 style={{ width: '18px', height: '18px' }}
               />
-              <span style={{ fontSize: '0.9rem', color: '#334155' }}>
-                <strong>Placement Freeze on Acceptance:</strong> Automatically freeze student application permissions once an offer is formally accepted.
+              <span style={{ fontSize: '0.9rem', color: '#475569' }}>
+                <strong style={{ color: '#111827' }}>Placement Freeze on Acceptance:</strong> Automatically freeze student application permissions once an offer is formally accepted.
               </span>
             </label>
 
@@ -123,8 +123,8 @@ export const TnpPolicyView: React.FC = () => {
                 onChange={(e) => setPolicy({ ...policy, allowOfferUpgrade: e.target.checked })}
                 style={{ width: '18px', height: '18px' }}
               />
-              <span style={{ fontSize: '0.9rem', color: '#334155' }}>
-                <strong>Dream Company Upgrade Allowance:</strong> Allow placed students to apply only for "Tier-1 / Dream" companies with &gt;= 30% higher CTC.
+              <span style={{ fontSize: '0.9rem', color: '#475569' }}>
+                <strong style={{ color: '#111827' }}>Dream Company Upgrade Allowance:</strong> Allow placed students to apply only for "Tier-1 / Dream" companies with &gt;= 30% higher CTC.
               </span>
             </label>
 
@@ -135,8 +135,8 @@ export const TnpPolicyView: React.FC = () => {
                 onChange={(e) => setPolicy({ ...policy, allowMultipleApplications: e.target.checked })}
                 style={{ width: '18px', height: '18px' }}
               />
-              <span style={{ fontSize: '0.9rem', color: '#334155' }}>
-                <strong>Parallel Drive Applications:</strong> Permit eligible students to apply to concurrent campus drives before offer release.
+              <span style={{ fontSize: '0.9rem', color: '#475569' }}>
+                <strong style={{ color: '#111827' }}>Parallel Drive Applications:</strong> Permit eligible students to apply to concurrent campus drives before offer release.
               </span>
             </label>
           </div>

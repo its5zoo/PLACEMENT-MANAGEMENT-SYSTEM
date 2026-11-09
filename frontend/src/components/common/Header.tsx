@@ -45,7 +45,7 @@ export const Header: React.FC<HeaderProps> = ({
       case 'profile': return 'My Student Profile';
       case 'recommendations': return 'Smart Drive Recommendations';
       case 'readiness': return 'Placement Readiness Score (6 Pillars)';
-      case 'job-listings': return 'Campus Job & Drive Listings';
+      case 'job-listings': return portalMode === 'TNP' ? 'Active Campus Placement Drives' : 'Campus Job & Drive Listings';
       case 'my-applications': return 'My Applications Status';
       case 'documents': return 'Verified Placement Documents';
       case 'offers': return 'Placement Offers & Letters';
@@ -105,11 +105,11 @@ export const Header: React.FC<HeaderProps> = ({
           width: '32px',
           height: '32px',
           borderRadius: '8px',
-          backgroundColor: '#ffffff',
+          backgroundColor: '#FFFFFF',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          border: '1px solid #e2e8f0',
+          border: '1px solid #E2E8F0',
           padding: '2px',
           boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
           flexShrink: 0
@@ -118,7 +118,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
         <div>
           <h1 className="page-title" style={{ margin: 0, fontSize: '1.2rem' }}>{getPageTitle(activeTab)}</h1>
-          <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
+          <div style={{ fontSize: '0.72rem', color: '#64748B' }}>
             GIET University Placement Portal • Unified Operations
           </div>
         </div>
@@ -142,17 +142,17 @@ export const Header: React.FC<HeaderProps> = ({
               right: 0,
               top: '50px',
               width: '320px',
-              backgroundColor: '#ffffff',
+              backgroundColor: '#FFFFFF',
               borderRadius: '12px',
-              boxShadow: '0 10px 25px -5px rgba(0,0,0,0.15), 0 4px 6px -2px rgba(0,0,0,0.05)',
-              border: '1px solid #e2e8f0',
+              boxShadow: '0 4px 6px -1px rgba(0,0,0,0.08)',
+              border: '1px solid #E2E8F0',
               padding: '16px',
               zIndex: 50
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <strong style={{ fontSize: '0.95rem' }}>Placement Alerts</strong>
+                <strong style={{ fontSize: '0.95rem', color: '#111827' }}>Placement Alerts</strong>
                 <span 
-                  style={{ fontSize: '0.75rem', color: '#2563eb', fontWeight: 600, cursor: 'pointer' }}
+                  style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 600, cursor: 'pointer' }}
                   onClick={() => {
                     notifList.forEach(n => api.markNotificationRead(n._id));
                     setNotifList(prev => prev.map(n => ({ ...n, unread: false })));
@@ -163,18 +163,18 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '320px', overflowY: 'auto' }}>
                 {notifList.length === 0 ? (
-                  <div style={{ fontSize: '0.85rem', color: '#64748b', textAlign: 'center', padding: '12px' }}>
+                  <div style={{ fontSize: '0.85rem', color: '#64748B', textAlign: 'center', padding: '12px' }}>
                     No alerts yet
                   </div>
                 ) : (
                   notifList.map(n => (
-                    <div key={n._id || n.id} style={{ display: 'flex', gap: '12px', padding: '8px', borderRadius: '8px', backgroundColor: n.unread ? '#eff6ff' : '#f8fafc' }}>
-                      <div style={{ color: n.unread ? '#2563eb' : '#64748b', marginTop: '2px' }}>
+                    <div key={n._id || n.id} style={{ display: 'flex', gap: '12px', padding: '8px', borderRadius: '8px', backgroundColor: n.unread ? '#F1F5F9' : '#FFFFFF', border: '1px solid #E2E8F0' }}>
+                      <div style={{ color: n.unread ? '#2563EB' : '#64748B', marginTop: '2px' }}>
                         <Bell size={16} />
                       </div>
                       <div>
-                        <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#0f172a' }}>{n.title}</div>
-                        <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{n.time || n.createdAt?.substring(0, 10) || 'Recently'}</div>
+                        <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#111827' }}>{n.title}</div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748B' }}>{n.time || n.createdAt?.substring(0, 10) || 'Recently'}</div>
                       </div>
                     </div>
                   ))
@@ -199,9 +199,9 @@ export const Header: React.FC<HeaderProps> = ({
             />
             <div className="user-details" style={{ display: 'flex', flexDirection: 'column' }}>
               <span className="user-name" style={{ fontWeight: 600, fontSize: '0.85rem' }}>{userProfile.name}</span>
-              <span className="user-role" style={{ fontSize: '0.72rem', color: '#64748b' }}>{userProfile.role}</span>
+              <span className="user-role" style={{ fontSize: '0.72rem', color: '#64748B' }}>{userProfile.role}</span>
             </div>
-            <ChevronDown size={16} style={{ color: '#64748b' }} />
+            <ChevronDown size={16} style={{ color: '#64748B' }} />
           </div>
 
           {showUserDropdown && (
@@ -210,14 +210,14 @@ export const Header: React.FC<HeaderProps> = ({
               right: 0,
               top: '52px',
               width: '220px',
-              backgroundColor: '#ffffff',
+              backgroundColor: '#FFFFFF',
               borderRadius: '12px',
-              boxShadow: '0 10px 25px -5px rgba(0,0,0,0.15)',
-              border: '1px solid #e2e8f0',
+              boxShadow: '0 4px 6px -1px rgba(0,0,0,0.08)',
+              border: '1px solid #E2E8F0',
               padding: '8px',
               zIndex: 50
             }}>
-              <div style={{ padding: '8px 12px', fontSize: '0.78rem', color: '#64748b', borderBottom: '1px solid #f1f5f9' }}>
+              <div style={{ padding: '8px 12px', fontSize: '0.78rem', color: '#64748B', borderBottom: '1px solid #E2E8F0' }}>
                 {userProfile.roll}
               </div>
               <button 
@@ -227,16 +227,16 @@ export const Header: React.FC<HeaderProps> = ({
                   else if (portalMode === 'TNP') setActiveTab('tnp-policy');
                   else setActiveTab('company-profile');
                 }}
-                style={{ width: '100%', textAlign: 'left', padding: '10px 12px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#0f172a' }}
+                style={{ width: '100%', textAlign: 'left', padding: '10px 12px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#111827' }}
               >
                 View Profile & Settings
               </button>
               <button 
                 onClick={() => { 
-                  setShowUserDropdown(false);
+                  setShowUserDropdown(false); 
                   onLogout();
                 }}
-                style={{ width: '100%', textAlign: 'left', padding: '10px 12px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#ef4444', fontWeight: 600 }}
+                style={{ width: '100%', textAlign: 'left', padding: '10px 12px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#DC2626', fontWeight: 600 }}
               >
                 Sign Out / Switch Role
               </button>

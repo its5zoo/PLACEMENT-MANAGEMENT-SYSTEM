@@ -26,7 +26,7 @@ export const ReadinessScoreView: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="view-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px', color: '#64748b' }}>
+      <div className="view-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px', color: '#64748B' }}>
         <Loader2 size={22} style={{ marginRight: '8px', animation: 'spin 1s linear infinite' }} />
         <span>Calculating multi-factor placement readiness...</span>
       </div>
@@ -59,18 +59,18 @@ export const ReadinessScoreView: React.FC = () => {
       }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <Award size={18} color="#2563eb" />
-            <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#2563eb', fontWeight: 700 }}>
+            <Award size={18} color="#0F1B33" />
+            <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: '#475569', fontWeight: 700 }}>
               Institutional Placement Diagnostic
             </span>
           </div>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, margin: '2px 0 8px 0', color: '#0f172a' }}>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, margin: '2px 0 8px 0', color: '#111827' }}>
             Placement Readiness Index
           </h2>
-          <p style={{ margin: 0, color: '#64748b', fontSize: '0.86rem', maxWidth: '580px' }}>
+          <p style={{ margin: 0, color: '#64748B', fontSize: '0.86rem', maxWidth: '580px' }}>
             Evaluated by the TNP Verification Engine based on institutional records, verified marksheets, academic consistency, and drive criteria.
           </p>
-          <div style={{ marginTop: '10px', fontSize: '0.84rem', fontWeight: 600, color: '#15803d' }}>
+          <div style={{ marginTop: '10px', fontSize: '0.84rem', fontWeight: 600, color: '#111827' }}>
             Institutional Evaluation: {rating}
           </div>
         </div>
@@ -80,15 +80,15 @@ export const ReadinessScoreView: React.FC = () => {
           width: '110px',
           height: '110px',
           borderRadius: '50%',
-          border: '6px solid #2563eb',
+          border: '6px solid #0F1B33',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#f8fafc',
+          backgroundColor: '#F8FAFC',
         }}>
-          <span style={{ fontSize: '1.9rem', fontWeight: 800, lineHeight: 1, color: '#0f172a' }}>{totalScore}</span>
-          <span style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '2px', fontWeight: 600 }}>out of 100</span>
+          <span style={{ fontSize: '1.9rem', fontWeight: 800, lineHeight: 1, color: '#111827' }}>{totalScore}</span>
+          <span style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '2px', fontWeight: 600 }}>out of 100</span>
         </div>
       </div>
 
@@ -98,10 +98,10 @@ export const ReadinessScoreView: React.FC = () => {
         <div className="section-card">
           <div className="card-header">
             <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <TrendingUp size={16} color="#2563eb" />
+              <TrendingUp size={16} color="#0F1B33" />
               <span>6-Pillar Evaluation Breakdown</span>
             </h3>
-            <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Diagnostic Criteria</span>
+            <span style={{ fontSize: '0.8rem', color: '#64748B' }}>Diagnostic Criteria</span>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -113,9 +113,9 @@ export const ReadinessScoreView: React.FC = () => {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <div style={{ color: '#475569' }}><Icon size={15} /></div>
-                      <span style={{ fontSize: '0.86rem', fontWeight: 600, color: '#0f172a' }}>{p.label}</span>
+                      <span style={{ fontSize: '0.86rem', fontWeight: 600, color: '#111827' }}>{p.label}</span>
                     </div>
-                    <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155' }}>
+                    <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#475569' }}>
                       {p.score} / {p.max} pts
                     </span>
                   </div>
@@ -125,7 +125,7 @@ export const ReadinessScoreView: React.FC = () => {
                       className="progress-bar-fill"
                       style={{
                         width: `${percentage}%`,
-                        backgroundColor: '#2563eb',
+                        backgroundColor: '#0F1B33',
                       }} 
                     />
                   </div>
@@ -139,12 +139,12 @@ export const ReadinessScoreView: React.FC = () => {
         <div className="section-card">
           <div className="card-header">
             <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertCircle size={16} color="#2563eb" />
+              <AlertCircle size={16} color="#0F1B33" />
               <span>Recommended Next Steps</span>
             </h3>
-            <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Action Plan</span>
+            <span style={{ fontSize: '0.8rem', color: '#64748B' }}>Action Plan</span>
           </div>
-          <p style={{ fontSize: '0.82rem', color: '#64748b', marginTop: 0, marginBottom: '14px' }}>
+          <p style={{ fontSize: '0.82rem', color: '#64748B', marginTop: 0, marginBottom: '14px' }}>
             Targeted actions to increase your institutional readiness score and maximize shortlisting conversion.
           </p>
 
@@ -153,14 +153,14 @@ export const ReadinessScoreView: React.FC = () => {
               <div style={{
                 padding: '16px',
                 borderRadius: '8px',
-                backgroundColor: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                backgroundColor: '#F8FAFC',
+                border: '1px solid #E2E8F0',
                 textAlign: 'center',
-                color: '#15803d',
+                color: '#15803D',
               }}>
                 <CheckCircle size={22} style={{ margin: '0 auto 6px auto' }} />
-                <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0f172a' }}>Profile Verified & Ready</div>
-                <div style={{ fontSize: '0.78rem', marginTop: '2px', color: '#64748b' }}>
+                <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#111827' }}>Profile Verified & Ready</div>
+                <div style={{ fontSize: '0.78rem', marginTop: '2px', color: '#64748B' }}>
                   All key institutional documents, verified CGPA, and technical credentials are fully up-to-date.
                 </div>
               </div>
@@ -169,24 +169,24 @@ export const ReadinessScoreView: React.FC = () => {
                 <div key={i} style={{
                   padding: '12px 14px',
                   borderRadius: '8px',
-                  backgroundColor: '#f8fafc',
-                  border: '1px solid #e2e8f0',
+                  backgroundColor: '#F8FAFC',
+                  border: '1px solid #E2E8F0',
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                 }}>
                   <div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#0f172a' }}>{action.title}</div>
-                    <span style={{ fontSize: '0.74rem', color: '#64748b' }}>Priority: {action.priority}</span>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#111827' }}>{action.title}</div>
+                    <span style={{ fontSize: '0.74rem', color: '#64748B' }}>Priority: {action.priority}</span>
                   </div>
                   <span style={{
-                    backgroundColor: '#ecfdf5',
-                    color: '#15803d',
+                    backgroundColor: '#F8FAFC',
+                    color: '#111827',
                     fontWeight: 700,
                     fontSize: '0.78rem',
                     padding: '3px 8px',
                     borderRadius: '6px',
-                    border: '1px solid #bbf7d0',
+                    border: '1px solid #E2E8F0',
                   }}>
                     {action.gain}
                   </span>

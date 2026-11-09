@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
-import { GraduationCap, ShieldCheck, Building2, Lock, Mail, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
-import { api, normalizeRole } from '../../services/api';
+import { 
+  Building2, 
+  GraduationCap, 
+  ShieldCheck, 
+  Mail, 
+  ArrowRight, 
+  Loader2,
+  CheckCircle2,
+  LockKeyhole
+} from 'lucide-react';
 import type { PortalMode } from '../../types';
+import { api } from '../../services/api';
 
 interface LoginViewProps {
   onLoginSuccess: (user: any, mode: PortalMode) => void;
@@ -14,33 +23,40 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Pre-configured role profiles
-  const rolePresets = {
+  const rolePresets: Record<PortalMode, {
+    roleTitle: string;
+    roleTag: string;
+    email: string;
+    password: string;
+    icon: any;
+    color: string;
+    description: string;
+  }> = {
     STUDENT: {
-      roleTitle: 'Student Portal',
+      roleTitle: 'Student',
+      roleTag: 'Placement Portal',
       email: '231cs001.faizaan@giet.edu',
       password: 'password123',
       icon: GraduationCap,
-      color: '#2563eb',
-      bgLight: '#eff6ff',
+      color: '#2563EB',
       description: 'Access smart drive matches, 6-pillar readiness score, verify marksheets & accept offers.',
     },
     TNP: {
-      roleTitle: 'TNP Cell Admin',
+      roleTitle: 'TNP Cell',
+      roleTag: 'Admin Control',
       email: 'tnp@giet.edu',
       password: 'admin123',
       icon: ShieldCheck,
-      color: '#0284c7',
-      bgLight: '#f0f9ff',
+      color: '#0284C7',
       description: 'Review company drive requests, override academic records, audit funnel & manage policy.',
     },
     COMPANY: {
-      roleTitle: 'Corporate Recruiter',
+      roleTitle: 'Recruiter',
+      roleTag: 'Corporate Portal',
       email: 'recruiter@google.com',
       password: 'password123',
       icon: Building2,
-      color: '#0d9488',
-      bgLight: '#f0fdfa',
+      color: '#0D9488',
       description: 'Post campus hiring drives, define eligibility cutoffs, review candidate fit & release offers.',
     }
   };
@@ -63,319 +79,343 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
         onLoginSuccess(res.data, mode);
       }
     } catch (err: any) {
-      setError(err.message || 'Authentication failed. Please check credentials.');
+      setError(err.message || 'Login failed. Please verify credentials.');
     } finally {
       setLoading(false);
     }
   };
 
+  const normalizeRole = (role: string): PortalMode => {
+    const r = role?.toUpperCase();
+    if (r === 'TNP' || r === 'TNP_ADMIN' || r === 'TPO' || r === 'ADMIN' || r === 'SUPER_ADMIN') {
+      return 'TNP';
+    }
+    if (r === 'COMPANY' || r === 'RECRUITER') {
+      return 'COMPANY';
+    }
+    return 'STUDENT';
+  };
+
   const currentPreset = rolePresets[selectedRole];
-  const IconComponent = currentPreset.icon;
 
   return (
     <div style={{
       minHeight: '100vh',
       width: '100vw',
       display: 'flex',
+      flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundImage: `linear-gradient(rgba(11, 19, 43, 0.65), rgba(11, 19, 43, 0.80)), url('/campus-flower-building.jpg')`,
+      position: 'relative',
+      backgroundImage: `
+        radial-gradient(ellipse at center, rgba(15, 23, 42, 0.68) 0%, rgba(9, 14, 26, 0.88) 100%),
+        url('/giet-campus.jpg')
+      `,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
       backgroundAttachment: 'fixed',
+      backgroundRepeat: 'no-repeat',
       padding: '24px 16px',
       fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif"
     }}>
+      {/* Main Glassmorphic Login Card */}
       <div style={{
-        maxWidth: '980px',
+        maxWidth: '460px',
         width: '100%',
-        backgroundColor: '#ffffff',
-        borderRadius: '20px',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-        overflow: 'hidden'
+        backgroundColor: 'rgba(255, 255, 255, 0.98)',
+        borderRadius: '24px',
+        border: '1px solid rgba(255, 255, 255, 0.6)',
+        padding: '36px 32px 28px 32px',
+        boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2)',
+        backdropFilter: 'blur(16px)',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        zIndex: 10
       }}>
-        {/* Left Side: Original Institutional Campus Banner with Blue Building (jo pehle tha img usko rehne diya) */}
+        {/* University Header with Logo */}
         <div style={{
-          position: 'relative',
-          backgroundImage: `linear-gradient(180deg, rgba(11, 19, 43, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%), url('/campus-building.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          color: '#ffffff',
-          padding: '36px 30px',
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between'
+          alignItems: 'center',
+          gap: '14px',
+          paddingBottom: '20px',
+          borderBottom: '1px solid #E2E8F0',
+          marginBottom: '20px'
         }}>
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
-            <div>
-              {/* Logo and University Title */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '28px' }}>
-                <div style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '12px',
-                  backgroundColor: '#ffffff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                  padding: '4px',
-                  flexShrink: 0
-                }}>
-                  <img 
-                    src="/gietu_logo.png" 
-                    alt="GIET University Logo" 
-                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                  />
-                </div>
-                <div>
-                  <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, letterSpacing: '0.02em', color: '#ffffff' }}>
-                    GIET UNIVERSITY
-                  </h2>
-                  <div style={{ fontSize: '0.76rem', color: '#93c5fd', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>
-                    Training & Placement Cell
-                  </div>
-                </div>
-              </div>
-
-              {/* Simple Title & Description */}
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 800, lineHeight: 1.35, marginBottom: '12px', color: '#ffffff' }}>
-                Campus Placement Portal
-              </h3>
-              <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6, marginBottom: '28px' }}>
-                A unified platform connecting students, recruiters, and placement officers for smooth and transparent campus hiring.
-              </p>
-
-              {/* Simple Feature Highlights */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.86rem', color: '#f8fafc' }}>
-                  <CheckCircle2 size={18} color="#60a5fa" style={{ flexShrink: 0 }} />
-                  <span>Simple Campus Drive Applications</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.86rem', color: '#f8fafc' }}>
-                  <CheckCircle2 size={18} color="#60a5fa" style={{ flexShrink: 0 }} />
-                  <span>Verified Student Profiles & Marksheets</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.86rem', color: '#f8fafc' }}>
-                  <CheckCircle2 size={18} color="#60a5fa" style={{ flexShrink: 0 }} />
-                  <span>Live Application Status & Drive Schedules</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.86rem', color: '#f8fafc' }}>
-                  <CheckCircle2 size={18} color="#60a5fa" style={{ flexShrink: 0 }} />
-                  <span>Direct Placement Offers & Communication</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div style={{ marginTop: '36px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.12)', fontSize: '0.76rem', color: '#94a3b8' }}>
-              Secure Institutional Portal • GIET University Gunupur
+          <div style={{
+            width: '52px',
+            height: '52px',
+            borderRadius: '14px',
+            backgroundColor: '#FFFFFF',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '1.5px solid #E2E8F0',
+            padding: '4px',
+            flexShrink: 0,
+            boxShadow: '0 4px 12px rgba(37, 99, 235, 0.12)'
+          }}>
+            <img 
+              src="/gietu_logo.png" 
+              alt="GIET University Logo" 
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            />
+          </div>
+          <div>
+            <h2 style={{
+              margin: 0,
+              fontSize: '1.28rem',
+              fontWeight: 800,
+              letterSpacing: '-0.01em',
+              color: '#0F172A'
+            }}>
+              GIET UNIVERSITY
+            </h2>
+            <div style={{
+              fontSize: '0.75rem',
+              color: '#64748B',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
+              marginTop: '2px'
+            }}>
+              Training & Placement Cell
             </div>
           </div>
         </div>
 
-        {/* Right Side: Clean Login Form Div */}
+        {/* Portal Greeting */}
+        <div style={{ marginBottom: '18px' }}>
+          <h3 style={{
+            fontSize: '1.25rem',
+            fontWeight: 800,
+            color: '#0F172A',
+            margin: '0 0 4px 0'
+          }}>
+            Select Portal & Sign In
+          </h3>
+          <p style={{
+            margin: 0,
+            fontSize: '0.82rem',
+            color: '#64748B',
+            lineHeight: 1.45
+          }}>
+            Authenticate with your institutional or corporate credentials.
+          </p>
+        </div>
+
+        {/* 3-Role Switcher Tabs */}
         <div style={{
-          backgroundColor: '#ffffff',
-          padding: '36px 30px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: '6px',
+          marginBottom: '16px',
+          backgroundColor: '#F1F5F9',
+          padding: '4px',
+          borderRadius: '12px',
+          border: '1px solid #E2E8F0'
         }}>
-          <div style={{ marginBottom: '20px' }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '4px 10px',
-              borderRadius: '20px',
-              backgroundColor: '#f1f5f9',
-              border: '1px solid #e2e8f0',
-              marginBottom: '10px'
-            }}>
-              <img src="/gietu_logo.png" alt="GIET Logo" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />
-              <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#334155', letterSpacing: '0.02em', textTransform: 'uppercase' }}>
-                GIET University Official Portal
-              </span>
-            </div>
-            <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0' }}>
-              Select Portal & Sign In
-            </h3>
-            <p style={{ margin: 0, fontSize: '0.82rem', color: '#64748b' }}>
-              Authenticate with your assigned institutional or corporate credentials.
-            </p>
-          </div>
+          {(['STUDENT', 'TNP', 'COMPANY'] as PortalMode[]).map((mode) => {
+            const item = rolePresets[mode];
+            const isSelected = selectedRole === mode;
+            const ItemIcon = item.icon;
+            return (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => handleRoleSelect(mode)}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '3px',
+                  padding: '9px 4px',
+                  borderRadius: '9px',
+                  border: isSelected ? '1px solid #DBEAFE' : '1px solid transparent',
+                  cursor: 'pointer',
+                  backgroundColor: isSelected ? '#FFFFFF' : 'transparent',
+                  color: isSelected ? '#1D4ED8' : '#64748B',
+                  fontWeight: isSelected ? 700 : 500,
+                  fontSize: '0.78rem',
+                  boxShadow: isSelected ? '0 2px 6px rgba(37, 99, 235, 0.12)' : 'none',
+                  transition: 'all 0.18s ease'
+                }}
+              >
+                <ItemIcon size={18} color={isSelected ? '#2563EB' : '#64748B'} />
+                <span>{item.roleTitle}</span>
+              </button>
+            );
+          })}
+        </div>
 
-          {/* Role Switcher Tabs */}
+        {/* Error Alert */}
+        {error && (
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '6px',
-            marginBottom: '18px',
-            backgroundColor: '#f1f5f9',
-            padding: '4px',
-            borderRadius: '12px'
-          }}>
-            {(['STUDENT', 'TNP', 'COMPANY'] as PortalMode[]).map((mode) => {
-              const item = rolePresets[mode];
-              const isSelected = selectedRole === mode;
-              const ItemIcon = item.icon;
-              return (
-                <button
-                  key={mode}
-                  type="button"
-                  onClick={() => handleRoleSelect(mode)}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '4px',
-                    padding: '9px 4px',
-                    borderRadius: '8px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    backgroundColor: isSelected ? '#ffffff' : 'transparent',
-                    color: isSelected ? item.color : '#64748b',
-                    fontWeight: isSelected ? 700 : 500,
-                    fontSize: '0.78rem',
-                    boxShadow: isSelected ? '0 2px 4px rgba(0,0,0,0.06)' : 'none',
-                    transition: 'all 0.15s ease'
-                  }}
-                >
-                  <ItemIcon size={18} />
-                  <span>{item.roleTitle}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Role Overview Callout */}
-          <div style={{
-            backgroundColor: currentPreset.bgLight,
-            border: `1px solid ${currentPreset.color}35`,
+            backgroundColor: '#FEF2F2',
+            border: '1px solid #FECACA',
+            color: '#DC2626',
+            padding: '10px 14px',
             borderRadius: '10px',
-            padding: '11px 14px',
-            marginBottom: '18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px'
+            fontSize: '0.82rem',
+            marginBottom: '16px',
+            fontWeight: 600
           }}>
-            <div style={{ color: currentPreset.color, flexShrink: 0 }}>
-              <IconComponent size={22} />
-            </div>
-            <div>
-              <div style={{ fontSize: '0.8rem', fontWeight: 700, color: currentPreset.color }}>
-                {currentPreset.roleTitle} Access
-              </div>
-              <div style={{ fontSize: '0.74rem', color: '#475569' }}>
-                {currentPreset.description}
-              </div>
+            {error}
+          </div>
+        )}
+
+        {/* Sign In Form */}
+        <form onSubmit={(e) => handleSubmit(e)} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div>
+            <label style={{
+              display: 'block',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              color: '#334155',
+              marginBottom: '6px'
+            }}>
+              Official Email Address
+            </label>
+            <div style={{ position: 'relative' }}>
+              <Mail 
+                size={17} 
+                style={{
+                  position: 'absolute',
+                  left: '12px',
+                  top: '11px',
+                  color: '#94A3B8'
+                }} 
+              />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px 12px 10px 38px',
+                  borderRadius: '10px',
+                  border: '1.5px solid #E2E8F0',
+                  fontSize: '0.88rem',
+                  outline: 'none',
+                  backgroundColor: '#F8FAFC',
+                  color: '#0F172A',
+                  transition: 'all 0.15s ease'
+                }}
+                onFocus={(e) => {
+                  e.target.style.backgroundColor = '#FFFFFF';
+                  e.target.style.borderColor = '#2563EB';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.12)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.backgroundColor = '#F8FAFC';
+                  e.target.style.borderColor = '#E2E8F0';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
             </div>
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div style={{
-              backgroundColor: '#fef2f2',
-              border: '1px solid #fecaca',
-              color: '#b91c1c',
-              padding: '10px 14px',
-              borderRadius: '8px',
-              fontSize: '0.82rem',
-              marginBottom: '16px'
+          <div>
+            <label style={{
+              display: 'block',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              color: '#334155',
+              marginBottom: '6px'
             }}>
-              {error}
+              Password
+            </label>
+            <div style={{ position: 'relative' }}>
+              <LockKeyhole 
+                size={17} 
+                style={{
+                  position: 'absolute',
+                  left: '12px',
+                  top: '11px',
+                  color: '#94A3B8'
+                }} 
+              />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '10px 12px 10px 38px',
+                  borderRadius: '10px',
+                  border: '1.5px solid #E2E8F0',
+                  fontSize: '0.88rem',
+                  outline: 'none',
+                  backgroundColor: '#F8FAFC',
+                  color: '#0F172A',
+                  transition: 'all 0.15s ease'
+                }}
+                onFocus={(e) => {
+                  e.target.style.backgroundColor = '#FFFFFF';
+                  e.target.style.borderColor = '#2563EB';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.12)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.backgroundColor = '#F8FAFC';
+                  e.target.style.borderColor = '#E2E8F0';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
             </div>
-          )}
+          </div>
 
-          {/* Login Form */}
-          <form onSubmit={(e) => handleSubmit(e)} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#334155', marginBottom: '5px' }}>
-                Official Email Address
-              </label>
-              <div style={{ position: 'relative' }}>
-                <Mail size={16} style={{ position: 'absolute', left: '12px', top: '11px', color: '#94a3b8' }} />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '9px 12px 9px 38px',
-                    borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
-                    fontSize: '0.88rem',
-                    outline: 'none',
-                    backgroundColor: '#ffffff'
-                  }}
-                />
-              </div>
-            </div>
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              padding: '12px 18px',
+              borderRadius: '10px',
+              background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
+              color: '#FFFFFF',
+              border: 'none',
+              fontWeight: 700,
+              fontSize: '0.9rem',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              boxShadow: '0 4px 14px rgba(37, 99, 235, 0.35)',
+              transition: 'all 0.15s ease',
+              marginTop: '6px'
+            }}
+          >
+            {loading ? (
+              <>
+                <Loader2 size={17} style={{ animation: 'spin 1s linear infinite' }} />
+                <span>Verifying Credentials...</span>
+              </>
+            ) : (
+              <>
+                <span>Sign In to {currentPreset.roleTitle} Portal</span>
+                <ArrowRight size={17} />
+              </>
+            )}
+          </button>
+        </form>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#334155', marginBottom: '5px' }}>
-                Password
-              </label>
-              <div style={{ position: 'relative' }}>
-                <Lock size={16} style={{ position: 'absolute', left: '12px', top: '11px', color: '#94a3b8' }} />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '9px 12px 9px 38px',
-                    borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
-                    fontSize: '0.88rem',
-                    outline: 'none',
-                    backgroundColor: '#ffffff'
-                  }}
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                padding: '11px 16px',
-                borderRadius: '8px',
-                backgroundColor: currentPreset.color,
-                color: '#ffffff',
-                border: 'none',
-                fontWeight: 700,
-                fontSize: '0.88rem',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                transition: 'opacity 0.2s',
-                marginTop: '4px'
-              }}
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} />
-                  <span>Verifying Credentials...</span>
-                </>
-              ) : (
-                <>
-                  <span>Sign In to {currentPreset.roleTitle}</span>
-                  <ArrowRight size={16} />
-                </>
-              )}
-            </button>
-          </form>
+        {/* Institutional Card Footer */}
+        <div style={{
+          marginTop: '22px',
+          paddingTop: '16px',
+          borderTop: '1px solid #E2E8F0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '6px',
+          fontSize: '0.74rem',
+          color: '#64748B'
+        }}>
+          <CheckCircle2 size={14} color="#10B981" />
+          <span>Secure Institutional Sign In • GIET University</span>
         </div>
       </div>
     </div>

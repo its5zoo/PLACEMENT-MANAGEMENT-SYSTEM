@@ -23,7 +23,7 @@ export const CompaniesView: React.FC = () => {
           industry: c.industry,
           activeDrives: c.activeDrives || 1,
           avgPackage: c.avgPackage,
-          logoBg: c.logoBg || '#eff6ff',
+          logoBg: c.logoBg || '#F1F5F9',
           logoText: c.logoText || c.name.slice(0, 2).toUpperCase(),
         }));
         setCompanies(mapped);
@@ -44,7 +44,7 @@ export const CompaniesView: React.FC = () => {
     <div className="view-container">
       <div className="filter-bar">
         <div className="search-box">
-          <Search size={18} color="#64748b" />
+          <Search size={18} color="#64748B" />
           <input 
             type="text" 
             placeholder="Search participating companies..." 
@@ -55,7 +55,7 @@ export const CompaniesView: React.FC = () => {
       </div>
 
       {loading ? (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', color: '#64748b' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', color: '#64748B' }}>
           <Loader2 size={24} className="spin" style={{ marginRight: '8px', animation: 'spin 1s linear infinite' }} />
           <span>Loading companies from database...</span>
         </div>
@@ -68,35 +68,35 @@ export const CompaniesView: React.FC = () => {
                 width: '48px',
                 height: '48px',
                 borderRadius: '12px',
-                backgroundColor: '#ffffff',
-                border: '1px solid #e2e8f0',
+                backgroundColor: '#F1F5F9',
+                border: '1px solid #E2E8F0',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: 800,
                 fontSize: '1rem',
-                color: '#2563eb'
+                color: '#2563EB'
               }}>
                 {c.logoText}
               </div>
               <div>
-                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a' }}>{c.name}</h3>
-                <span style={{ fontSize: '0.8rem', color: '#64748b' }}>{c.industry}</span>
+                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#111827' }}>{c.name}</h3>
+                <span style={{ fontSize: '0.8rem', color: '#64748B' }}>{c.industry}</span>
               </div>
             </div>
 
-            <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+            <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
               <div>
-                <span style={{ color: '#64748b', display: 'block', fontSize: '0.75rem' }}>Active Drives</span>
-                <strong style={{ color: '#2563eb' }}>{c.activeDrives} Drives</strong>
+                <span style={{ color: '#64748B', display: 'block', fontSize: '0.75rem' }}>Active Drives</span>
+                <strong style={{ color: '#2563EB' }}>{c.activeDrives} Drives</strong>
               </div>
               <div>
-                <span style={{ color: '#64748b', display: 'block', fontSize: '0.75rem' }}>Avg Package</span>
-                <strong style={{ color: '#16a34a' }}>{c.avgPackage}</strong>
+                <span style={{ color: '#64748B', display: 'block', fontSize: '0.75rem' }}>Avg Package</span>
+                <strong style={{ color: '#15803D' }}>{c.avgPackage}</strong>
               </div>
             </div>
 
-            <button className="link-btn" style={{ justifyContent: 'center', paddingTop: '8px', borderTop: '1px dashed #e2e8f0' }}>
+            <button className="link-btn" style={{ justifyContent: 'center', paddingTop: '8px', borderTop: '1px dashed #E2E8F0', color: '#2563EB' }}>
               <span>View Company Profile</span>
               <ExternalLink size={14} />
             </button>
