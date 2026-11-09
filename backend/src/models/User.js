@@ -97,6 +97,29 @@ const userSchema = new mongoose.Schema(
           link: String,
         },
       ],
+      experience: [
+        {
+          role: String,
+          company: String,
+          duration: String,
+          description: String,
+        },
+      ],
+      willingToRelocate: { type: Boolean, default: true },
+      willingToTravel: { type: Boolean, default: true },
+      preferredWorkMode: { type: String, default: 'Flexible (Hybrid / On-site / Remote)' },
+      hobbies: {
+        type: [String],
+        default: ['Traveling & Exploring', 'Open Source Contributing', 'Competitive Coding', 'Tech Blogging', 'Photography'],
+      },
+      languages: {
+        type: [String],
+        default: ['English (Professional)', 'Hindi (Native)', 'Odia (Conversational)'],
+      },
+      careerObjective: {
+        type: String,
+        default: 'Passionate and detail-oriented Computer Science undergraduate with a strong foundation in full-stack web development, distributed systems, and data structures. Eager to contribute to high-impact software engineering teams at leading technology organizations with high adaptability and zeal to learn.',
+      },
       resumeUrl: { type: String, default: '' },
       resumeVerified: { type: Boolean, default: false },
       githubUrl: { type: String, default: '' },

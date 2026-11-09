@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Gift, Loader2, Eye, X, Mail, Phone } from 'lucide-react';
 import { api } from '../../services/api';
+import { StatusBadge } from '../common/StatusBadge';
 
 export const CompanyApplicantsView: React.FC = () => {
   const [drives, setDrives] = useState<any[]>([]);
@@ -180,21 +181,14 @@ export const CompanyApplicantsView: React.FC = () => {
                       </td>
                       <td style={{ padding: '16px 20px' }}>
                         <span style={{
-                          backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', color: '#1D4ED8',
+                          backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1', color: '#1E293B',
                           padding: '3px 8px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600,
                         }}>
                           {app.eligibilitySnapshot?.matchPercentage || 92}% Fit
                         </span>
                       </td>
                       <td style={{ padding: '16px 20px' }}>
-                        <span style={{
-                          padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700,
-                          backgroundColor: isOffered ? '#ECFDF5' : isShortlisted ? '#EFF6FF' : '#FFFBEB',
-                          border: `1px solid ${isOffered ? '#A7F3D0' : isShortlisted ? '#BFDBFE' : '#FDE68A'}`,
-                          color: isOffered ? '#047857' : isShortlisted ? '#1D4ED8' : '#B45309',
-                        }}>
-                          {app.status}
-                        </span>
+                        <StatusBadge status={app.status} />
                       </td>
                       <td style={{ padding: '16px 20px' }}>
                         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -268,8 +262,8 @@ export const CompanyApplicantsView: React.FC = () => {
                 <div>
                   <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     {selectedProfileCandidate.student?.name || 'Faizaan'}
-                    <span style={{ fontSize: '0.72rem', backgroundColor: '#ECFDF5', color: '#047857', border: '1px solid #A7F3D0', padding: '2px 8px', borderRadius: '999px', fontWeight: 700 }}>
-                      TNP Verified
+                    <span style={{ fontSize: '0.74rem', color: '#059669', fontWeight: 700 }}>
+                      • TNP Verified
                     </span>
                   </h3>
                   <div style={{ fontSize: '0.84rem', color: '#64748B', marginTop: '2px' }}>
@@ -322,16 +316,16 @@ export const CompanyApplicantsView: React.FC = () => {
             </div>
 
             {/* Application & Drive Details */}
-            <div style={{ backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '10px', padding: '14px', marginBottom: '18px' }}>
+            <div style={{ backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '14px', marginBottom: '18px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: '#1E40AF', fontWeight: 700, textTransform: 'uppercase' }}>Applied Position</div>
-                  <div style={{ fontSize: '0.98rem', fontWeight: 800, color: '#1E3A8A' }}>
+                  <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 700, textTransform: 'uppercase' }}>Applied Position</div>
+                  <div style={{ fontSize: '0.98rem', fontWeight: 800, color: '#0F172A' }}>
                     {selectedProfileCandidate.role} ({selectedProfileCandidate.ctc})
                   </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '0.75rem', color: '#1E40AF', fontWeight: 700, textTransform: 'uppercase' }}>Candidate Stage</div>
+                  <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 700, textTransform: 'uppercase' }}>Candidate Stage</div>
                   <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#2563EB' }}>
                     {selectedProfileCandidate.status}
                   </div>

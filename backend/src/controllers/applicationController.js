@@ -45,6 +45,17 @@ export const applyToJob = async (req, res, next) => {
       : { student: studentId, job: job._id };
     const existing = await Application.findOne(duplicateQuery);
     if (existing) {
+      if (req.body.forceReapply || req.body.isDemoReapply) {
+        existing.status = 'APPLIED';
+        existing.appliedDate = new Date();
+        await existing.save();
+        return res.json({
+          success: true,
+          message: 'Application re-submitted successfully for demo!',
+          data: existing,
+          isReapplied: true
+        });
+      }
       return res.status(409).json({ success: false, message: 'You have already applied for this listing' });
     }
 
@@ -207,6 +218,25 @@ export const updateApplicationStatus = async (req, res, next) => {
     });
 
     res.json({ success: true, data: application });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Withdraw student application
+// @route   DELETE /api/applications/:listingId/withdraw
+export const withdrawApplication = async (req, res, next) => {
+  try {
+    const studentId = req.user._id;
+    const { listingId } = req.params;
+    const deleted = await Application.findOneAndDelete({
+      student: studentId,
+      $or: [{ drive: listingId }, { job: listingId }, { _id: listingId }]
+    });
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: 'Application not found to withdraw' });
+    }
+    res.json({ success: true, message: 'Application withdrawn successfully' });
   } catch (error) {
     next(error);
   }

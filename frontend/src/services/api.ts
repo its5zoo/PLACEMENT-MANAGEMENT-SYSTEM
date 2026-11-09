@@ -95,14 +95,24 @@ export const api = {
   },
 
   // Student Application flow
-  async applyJob(jobId: string) {
+  async applyJob(jobId: string, options?: { forceReapply?: boolean; isDemoReapply?: boolean }) {
     const res = await fetch(`${API_BASE}/applications/apply`, {
       method: 'POST',
       headers: getHeaders(),
-      body: JSON.stringify({ jobId }),
+      body: JSON.stringify({ jobId, ...options }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || 'Failed to apply');
+    return data;
+  },
+
+  async withdrawApplication(listingId: string) {
+    const res = await fetch(`${API_BASE}/applications/${listingId}/withdraw`, {
+      method: 'DELETE',
+      headers: getHeaders(),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Failed to withdraw');
     return data;
   },
 

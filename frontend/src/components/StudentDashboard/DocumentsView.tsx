@@ -365,8 +365,8 @@ export const DocumentsView: React.FC = () => {
               >
                 {selectedFile ? (
                   <div>
-                    <div style={{ display: 'inline-flex', padding: '10px', borderRadius: '50%', backgroundColor: '#EFF6FF', color: '#2563EB', marginBottom: '8px' }}>
-                      <FileCheck size={26} />
+                    <div style={{ display: 'inline-flex', padding: '10px', borderRadius: '50%', backgroundColor: '#2563EB', color: '#FFFFFF', marginBottom: '8px', boxShadow: '0 3px 8px rgba(37, 99, 235, 0.3)' }}>
+                      <FileCheck size={26} color="#FFFFFF" strokeWidth={2.2} />
                     </div>
                     <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#111827' }}>
                       {selectedFile.name}

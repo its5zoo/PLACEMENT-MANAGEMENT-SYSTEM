@@ -43,27 +43,27 @@ export const ProfileCompletion: React.FC = () => {
 
   const schemeStyles: Record<string, { iconBg: string; iconColor: string; iconBorder: string; fillGradient: string }> = {
     cobalt: {
-      iconBg: '#EFF6FF',
-      iconColor: '#2563EB',
-      iconBorder: '#BFDBFE',
+      iconBg: '#2563EB',
+      iconColor: '#FFFFFF',
+      iconBorder: '#1D4ED8',
       fillGradient: 'linear-gradient(90deg, #3B82F6 0%, #2563EB 100%)',
     },
     emerald: {
-      iconBg: '#ECFDF5',
-      iconColor: '#059669',
-      iconBorder: '#A7F3D0',
+      iconBg: '#059669',
+      iconColor: '#FFFFFF',
+      iconBorder: '#047857',
       fillGradient: 'linear-gradient(90deg, #10B981 0%, #059669 100%)',
     },
     indigo: {
-      iconBg: '#EEF2FF',
-      iconColor: '#6366F1',
-      iconBorder: '#C7D2FE',
+      iconBg: '#4F46E5',
+      iconColor: '#FFFFFF',
+      iconBorder: '#4338CA',
       fillGradient: 'linear-gradient(90deg, #818CF8 0%, #6366F1 100%)',
     },
     amber: {
-      iconBg: '#FFFBEB',
-      iconColor: '#D97706',
-      iconBorder: '#FDE68A',
+      iconBg: '#D97706',
+      iconColor: '#FFFFFF',
+      iconBorder: '#B45309',
       fillGradient: 'linear-gradient(90deg, #FBBF24 0%, #F59E0B 100%)',
     },
   };
@@ -74,12 +74,12 @@ export const ProfileCompletion: React.FC = () => {
         <h3 className="card-title">Placement Profile Completion</h3>
         <span style={{
           fontSize: '0.78rem',
-          color: '#1D4ED8',
+          color: '#1E293B',
           fontWeight: 700,
-          backgroundColor: '#EFF6FF',
+          backgroundColor: '#F1F5F9',
           padding: '3px 10px',
           borderRadius: '999px',
-          border: '1px solid #BFDBFE'
+          border: '1px solid #CBD5E1'
         }}>
           Overall: 72%
         </span>

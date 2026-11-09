@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Target, AlertCircle, Loader2, MapPin, DollarSign, Calendar } from 'lucide-react';
+import { Target, AlertCircle, Loader2, MapPin, DollarSign, Calendar, CheckCircle2 } from 'lucide-react';
 import { api } from '../../services/api';
 import { EligibilityModal } from './EligibilityModal';
+import { DriveDetailApplyModal } from './DriveDetailApplyModal';
 
 export const RecommendationsView: React.FC = () => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedEvaluation, setSelectedEvaluation] = useState<any | null>(null);
+  const [selectedDriveModal, setSelectedDriveModal] = useState<any | null>(null);
 
   useEffect(() => {
     loadRecommendations();
@@ -15,24 +17,44 @@ export const RecommendationsView: React.FC = () => {
   const loadRecommendations = async () => {
     try {
       setLoading(true);
-      const res = await api.getRecommendations();
-      if (res.data) {
-        setData(res.data);
+      const [recsRes, myAppsRes] = await Promise.all([
+        api.getRecommendations(),
+        api.getMyApplications().catch(() => ({ data: [] }))
+      ]);
+
+      const map: Record<string, string> = {};
+      if (myAppsRes?.data) {
+        myAppsRes.data.forEach((app: any) => {
+          const dId = app.drive?._id || app.drive || app.job?._id || app.job;
+          if (dId) {
+            map[dId.toString()] = app.status || 'APPLIED';
+          }
+        });
+      }
+
+      if (recsRes?.data) {
+        const enrichWithMap = (item: any) => {
+          const dId = (item.drive?._id || item.driveId)?.toString();
+          const status = map[dId] || item.applicationStatus;
+          return {
+            ...item,
+            hasApplied: Boolean(status) || item.hasApplied,
+            applicationStatus: status || item.applicationStatus,
+          };
+        };
+
+        const enrichedData = {
+          ...recsRes.data,
+          recommended: (recsRes.data.recommended || []).map(enrichWithMap),
+          nearMatch: (recsRes.data.nearMatch || []).map(enrichWithMap),
+          eligible: (recsRes.data.eligible || []).map(enrichWithMap),
+        };
+        setData(enrichedData);
       }
     } catch (err) {
       console.error('Error fetching recommendations:', err);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleApply = async (driveId: string) => {
-    try {
-      await api.applyJob(driveId);
-      alert('Application submitted successfully!');
-      loadRecommendations();
-    } catch (err: any) {
-      alert(err.message || 'Failed to apply');
     }
   };
 
@@ -50,7 +72,7 @@ export const RecommendationsView: React.FC = () => {
   return (
     <div className="view-container">
       {/* Top Banner Card */}
-      <div className="section-card" style={{
+      <div className="section-card responsive-banner" style={{
         padding: '22px 24px',
         display: 'flex',
         justifyContent: 'space-between',
@@ -60,7 +82,7 @@ export const RecommendationsView: React.FC = () => {
       }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <Target size={18} color="#0F1B33" />
+            <Target size={18} color="#2563EB" />
             <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#111827' }}>
               Smart Placement Match Engine
             </h2>
@@ -70,12 +92,12 @@ export const RecommendationsView: React.FC = () => {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <div style={{ backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', padding: '8px 16px', borderRadius: '8px', textAlign: 'center' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+          <div style={{ backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', padding: '8px 16px', borderRadius: '8px', textAlign: 'center', minWidth: '85px' }}>
             <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#111827' }}>{recommended.length}</div>
             <div style={{ fontSize: '0.72rem', color: '#64748B', fontWeight: 600 }}>Top Matches</div>
           </div>
-          <div style={{ backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', padding: '8px 16px', borderRadius: '8px', textAlign: 'center' }}>
+          <div style={{ backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', padding: '8px 16px', borderRadius: '8px', textAlign: 'center', minWidth: '85px' }}>
             <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#111827' }}>{nearMatch.length}</div>
             <div style={{ fontSize: '0.72rem', color: '#64748B', fontWeight: 600 }}>Near Matches</div>
           </div>
@@ -84,10 +106,10 @@ export const RecommendationsView: React.FC = () => {
 
       {/* 1. TOP RECOMMENDED DRIVES */}
       {recommended.length > 0 && (
-        <div>
-          <div className="card-header" style={{ marginBottom: '14px' }}>
-            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Target size={16} color="#0F1B33" />
+        <div style={{ marginTop: '16px' }}>
+          <div className="card-header" style={{ marginBottom: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+              <Target size={16} color="#2563EB" />
               <span>High-Fit Placement Drives</span>
             </h3>
             <span style={{ fontSize: '0.8rem', color: '#64748B' }}>{recommended.length} Opportunities Available</span>
@@ -96,46 +118,83 @@ export const RecommendationsView: React.FC = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {recommended.map((item: any) => {
               const drive = item.drive;
+              const hasApplied = Boolean(item.hasApplied);
+              const appStatus = item.applicationStatus || 'APPLIED';
+
               return (
                 <div key={item.driveId} className="section-card" style={{ padding: '18px 20px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px' }}>
-                    <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
                       <div style={{
-                        width: '44px', height: '44px', borderRadius: '10px',
-                        backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0',
+                        width: '46px', height: '46px', borderRadius: '12px',
+                        backgroundColor: '#0F172A', color: '#FFFFFF',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontWeight: 800, fontSize: '1rem', color: '#111827',
+                        fontWeight: 800, fontSize: '1rem', flexShrink: 0,
+                        boxShadow: '0 2px 6px rgba(15, 23, 42, 0.15)'
                       }}>
                         {drive.logoText || drive.companyName.slice(0, 2).toUpperCase()}
                       </div>
                       <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#111827' }}>{drive.role}</h4>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                          <h4 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 700, color: '#111827' }}>
+                            {drive.role}
+                          </h4>
                           <span style={{
-                            backgroundColor: '#F8FAFC', color: '#111827', border: '1px solid #E2E8F0',
+                            backgroundColor: '#EFF6FF', color: '#1D4ED8', border: '1px solid #BFDBFE',
                             fontSize: '0.72rem', padding: '2px 8px', borderRadius: '12px', fontWeight: 700,
                           }}>
                             {item.matchPercentage}% Match
                           </span>
                         </div>
-                        <div style={{ fontSize: '0.82rem', color: '#64748B', fontWeight: 600, marginTop: '2px' }}>{drive.companyName}</div>
+                        <div style={{ fontSize: '0.84rem', color: '#64748B', fontWeight: 600, marginTop: '2px' }}>
+                          {drive.companyName}
+                        </div>
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                    {/* ACTION BUTTONS */}
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                      {hasApplied && (
+                        <span style={{
+                          fontSize: '0.76rem',
+                          fontWeight: 700,
+                          color: '#047857',
+                          backgroundColor: '#ECFDF5',
+                          border: '1px solid #A7F3D0',
+                          padding: '5px 10px',
+                          borderRadius: '6px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '5px'
+                        }}>
+                          <CheckCircle2 size={13} color="#059669" />
+                          <span>Applied ({appStatus})</span>
+                        </span>
+                      )}
+
                       <button 
+                        type="button"
                         className="btn-secondary"
                         onClick={() => setSelectedEvaluation(item)}
                         style={{ fontSize: '0.82rem', padding: '7px 12px' }}
                       >
                         Explain Eligibility
                       </button>
+
                       <button 
+                        type="button"
                         className="btn-primary"
-                        onClick={() => handleApply(drive._id)}
-                        style={{ fontSize: '0.82rem', padding: '7px 14px' }}
+                        onClick={() => setSelectedDriveModal(item)}
+                        style={{ 
+                          fontSize: '0.82rem', 
+                          padding: '7px 14px',
+                          backgroundColor: hasApplied ? '#0F172A' : '#2563EB',
+                          color: '#FFFFFF',
+                          borderColor: hasApplied ? '#0F172A' : '#2563EB',
+                          boxShadow: hasApplied ? 'none' : '0 3px 8px rgba(37, 99, 235, 0.25)'
+                        }}
                       >
-                        Apply Now
+                        {hasApplied ? 'View Details' : 'View Details & Apply'}
                       </button>
                     </div>
                   </div>
@@ -144,7 +203,7 @@ export const RecommendationsView: React.FC = () => {
                     backgroundColor: '#F8FAFC',
                     border: '1px solid #E2E8F0',
                     padding: '8px 12px',
-                    borderRadius: '6px',
+                    borderRadius: '8px',
                     margin: '12px 0',
                     fontSize: '0.82rem',
                     color: '#475569',
@@ -154,13 +213,13 @@ export const RecommendationsView: React.FC = () => {
 
                   <div style={{ display: 'flex', gap: '20px', fontSize: '0.82rem', color: '#64748B', flexWrap: 'wrap' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <MapPin size={14} /> {drive.location}
+                      <MapPin size={14} color="#2563EB" /> {drive.location}
                     </span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <DollarSign size={14} /> {drive.ctc}
+                      <DollarSign size={14} color="#059669" /> {drive.ctc}
                     </span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <Calendar size={14} /> Deadline: {new Date(drive.applicationDeadline).toLocaleDateString('en-GB')}
+                      <Calendar size={14} /> Deadline: {drive.applicationDeadline ? new Date(drive.applicationDeadline).toLocaleDateString('en-GB') : '24/11/2026'}
                     </span>
                   </div>
                 </div>
@@ -172,10 +231,10 @@ export const RecommendationsView: React.FC = () => {
 
       {/* 2. NEAR-MATCH DRIVES */}
       {nearMatch.length > 0 && (
-        <div style={{ marginTop: '8px' }}>
-          <div className="card-header" style={{ marginBottom: '14px' }}>
-            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertCircle size={16} color="#0F1B33" />
+        <div style={{ marginTop: '20px' }}>
+          <div className="card-header" style={{ marginBottom: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+              <AlertCircle size={16} color="#D97706" />
               <span>Near-Match Opportunities</span>
             </h3>
             <span style={{ fontSize: '0.8rem', color: '#64748B' }}>Requirements Needed</span>
@@ -187,43 +246,55 @@ export const RecommendationsView: React.FC = () => {
               return (
                 <div key={item.driveId} className="section-card" style={{ padding: '18px 20px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px' }}>
-                    <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
                       <div style={{
-                        width: '44px', height: '44px', borderRadius: '10px',
+                        width: '46px', height: '46px', borderRadius: '12px',
                         backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontWeight: 800, fontSize: '1rem', color: '#111827',
+                        fontWeight: 800, fontSize: '1rem', color: '#111827', flexShrink: 0
                       }}>
                         {drive.logoText || drive.companyName.slice(0, 2).toUpperCase()}
                       </div>
                       <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <h4 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#111827' }}>{drive.role}</h4>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                          <h4 style={{ margin: 0, fontSize: '1.02rem', fontWeight: 700, color: '#111827' }}>{drive.role}</h4>
                           <span style={{
-                            backgroundColor: '#F8FAFC', color: '#475569', border: '1px solid #E2E8F0',
+                            backgroundColor: '#FFFBEB', color: '#B45309', border: '1px solid #FDE68A',
                             fontSize: '0.72rem', padding: '2px 8px', borderRadius: '12px', fontWeight: 700,
                           }}>
                             {item.matchPercentage}% Near Match
                           </span>
                         </div>
-                        <div style={{ fontSize: '0.82rem', color: '#64748B', fontWeight: 600, marginTop: '2px' }}>{drive.companyName}</div>
+                        <div style={{ fontSize: '0.84rem', color: '#64748B', fontWeight: 600, marginTop: '2px' }}>{drive.companyName}</div>
                       </div>
                     </div>
 
-                    <button 
-                      className="btn-secondary"
-                      onClick={() => setSelectedEvaluation(item)}
-                      style={{ fontSize: '0.82rem', padding: '7px 12px' }}
-                    >
-                      Why Can't I Apply?
-                    </button>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <button 
+                        type="button"
+                        className="btn-secondary"
+                        onClick={() => setSelectedEvaluation(item)}
+                        style={{ fontSize: '0.82rem', padding: '7px 12px' }}
+                      >
+                        Why Can't I Apply?
+                      </button>
+
+                      <button 
+                        type="button"
+                        className="btn-secondary"
+                        onClick={() => setSelectedDriveModal(item)}
+                        style={{ fontSize: '0.82rem', padding: '7px 12px' }}
+                      >
+                        View Drive Details
+                      </button>
+                    </div>
                   </div>
 
                   <div style={{
                     backgroundColor: '#F8FAFC',
                     border: '1px solid #E2E8F0',
                     padding: '8px 12px',
-                    borderRadius: '6px',
+                    borderRadius: '8px',
                     margin: '12px 0',
                     fontSize: '0.82rem',
                     color: '#475569',
@@ -233,10 +304,10 @@ export const RecommendationsView: React.FC = () => {
 
                   <div style={{ display: 'flex', gap: '20px', fontSize: '0.82rem', color: '#64748B', flexWrap: 'wrap' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <MapPin size={14} /> {drive.location}
+                      <MapPin size={14} color="#2563EB" /> {drive.location}
                     </span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <DollarSign size={14} /> {drive.ctc}
+                      <DollarSign size={14} color="#059669" /> {drive.ctc}
                     </span>
                   </div>
                 </div>
@@ -246,13 +317,29 @@ export const RecommendationsView: React.FC = () => {
         </div>
       )}
 
-      {/* Reusable Explainability Modal */}
-      <EligibilityModal 
-        evaluation={selectedEvaluation}
-        onClose={() => setSelectedEvaluation(null)}
-        canApply={selectedEvaluation?.isEligible}
-        onApply={() => selectedEvaluation?.driveId && handleApply(selectedEvaluation.driveId)}
-      />
+      {/* 3. Reusable Explainability Modal */}
+      {selectedEvaluation && (
+        <EligibilityModal 
+          evaluation={selectedEvaluation}
+          onClose={() => setSelectedEvaluation(null)}
+          canApply={selectedEvaluation?.isEligible && !selectedEvaluation?.hasApplied}
+          onApply={() => {
+            setSelectedDriveModal(selectedEvaluation);
+            setSelectedEvaluation(null);
+          }}
+        />
+      )}
+
+      {/* 4. Full Company Details & Live Application Modal */}
+      {selectedDriveModal && (
+        <DriveDetailApplyModal 
+          evaluation={selectedDriveModal}
+          onClose={() => setSelectedDriveModal(null)}
+          onApplicationUpdated={() => {
+            loadRecommendations();
+          }}
+        />
+      )}
     </div>
   );
 };

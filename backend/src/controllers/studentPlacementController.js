@@ -48,7 +48,36 @@ export const getRecommendations = async (req, res, next) => {
       status: { $in: ['PUBLISHED', 'APPLICATIONS_OPEN', 'APPROVED'] },
     }).sort({ createdAt: -1 });
 
+    const studentApplications = await Application.find({ student: student._id });
+    const appliedMap = new Map();
+    studentApplications.forEach(a => {
+      if (a.drive) {
+        appliedMap.set(a.drive.toString(), {
+          status: a.status,
+          appliedDate: a.appliedDate || a.createdAt,
+          applicationId: a._id.toString()
+        });
+      }
+    });
+
     const recommendations = RecommendationEngine.getRecommendations(student, drives);
+
+    const enrich = (item) => {
+      const appInfo = appliedMap.get(item.driveId?.toString());
+      return {
+        ...item,
+        hasApplied: Boolean(appInfo),
+        applicationStatus: appInfo?.status || null,
+        appliedDate: appInfo?.appliedDate || null,
+        applicationId: appInfo?.applicationId || null,
+      };
+    };
+
+    recommendations.recommended = recommendations.recommended.map(enrich);
+    recommendations.eligible = recommendations.eligible.map(enrich);
+    recommendations.nearMatch = recommendations.nearMatch.map(enrich);
+    recommendations.notEligible = recommendations.notEligible.map(enrich);
+
     res.json({ success: true, data: recommendations });
   } catch (err) {
     next(err);

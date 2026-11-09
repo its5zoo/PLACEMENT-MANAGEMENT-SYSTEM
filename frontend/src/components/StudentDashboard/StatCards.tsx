@@ -35,27 +35,30 @@ export const StatCards: React.FC<StatCardsProps> = ({ onCardClick, counts }) => 
     },
   ];
 
-  const themeConfig: Record<string, { iconBg: string; iconColor: string; iconBorder: string; trendBg: string; trendColor: string }> = {
+  const themeConfig: Record<string, { iconBg: string; iconColor: string; iconBorder: string; trendBg: string; trendColor: string; shadow: string }> = {
     cobalt: {
-      iconBg: '#EFF6FF',
-      iconColor: '#2563EB',
-      iconBorder: '#BFDBFE',
-      trendBg: '#EFF6FF',
-      trendColor: '#2563EB',
+      iconBg: '#2563EB',
+      iconColor: '#FFFFFF',
+      iconBorder: '#1D4ED8',
+      trendBg: '#2563EB',
+      trendColor: '#FFFFFF',
+      shadow: '0 3px 10px rgba(37, 99, 235, 0.28)',
     },
     sky: {
-      iconBg: '#F0F9FF',
-      iconColor: '#0284C7',
-      iconBorder: '#BAE6FD',
-      trendBg: '#F0F9FF',
-      trendColor: '#0284C7',
+      iconBg: '#0284C7',
+      iconColor: '#FFFFFF',
+      iconBorder: '#0369A1',
+      trendBg: '#0284C7',
+      trendColor: '#FFFFFF',
+      shadow: '0 3px 10px rgba(2, 132, 199, 0.28)',
     },
     emerald: {
-      iconBg: '#ECFDF5',
-      iconColor: '#059669',
-      iconBorder: '#A7F3D0',
-      trendBg: '#ECFDF5',
-      trendColor: '#059669',
+      iconBg: '#059669',
+      iconColor: '#FFFFFF',
+      iconBorder: '#047857',
+      trendBg: '#059669',
+      trendColor: '#FFFFFF',
+      shadow: '0 3px 10px rgba(5, 150, 105, 0.28)',
     },
   };
 
@@ -105,10 +108,11 @@ export const StatCards: React.FC<StatCardsProps> = ({ onCardClick, counts }) => 
                   backgroundColor: config.iconBg,
                   color: config.iconColor,
                   border: `1px solid ${config.iconBorder}`,
+                  boxShadow: config.shadow,
                   flexShrink: 0
                 }}
               >
-                <Icon size={22} />
+                <Icon size={22} color="#FFFFFF" strokeWidth={2.2} />
               </div>
               <div className="stat-details" style={{ display: 'flex', flexDirection: 'column' }}>
                 <span className="stat-label" style={{ fontSize: '0.82rem', color: '#64748B', fontWeight: 600, marginBottom: '2px' }}>
@@ -131,10 +135,11 @@ export const StatCards: React.FC<StatCardsProps> = ({ onCardClick, counts }) => 
                 justifyContent: 'center',
                 backgroundColor: config.trendBg,
                 color: config.trendColor,
-                border: `1px solid ${config.iconBorder}`
+                border: `1px solid ${config.iconBorder}`,
+                boxShadow: config.shadow
               }}
             >
-              <TrendingUp size={16} />
+              <TrendingUp size={16} color="#FFFFFF" strokeWidth={2.4} />
             </div>
           </div>
         );

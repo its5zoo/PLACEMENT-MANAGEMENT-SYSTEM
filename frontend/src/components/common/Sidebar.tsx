@@ -7,12 +7,10 @@ import {
   Building2, 
   Calendar, 
   Folder, 
-  TrendingUp, 
   MessageSquare, 
   Settings, 
   LogOut,
   Target,
-  Award,
   FileCheck,
   Gift,
   Users,
@@ -48,7 +46,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'dashboard', label: 'Dashboard', icon: LayoutGrid },
     { id: 'profile', label: 'Student Profile', icon: User },
     { id: 'recommendations', label: 'Smart Matches', icon: Target },
-    { id: 'readiness', label: 'Readiness Score', icon: Award },
     { id: 'job-listings', label: 'Job Listings', icon: Briefcase },
     { id: 'my-applications', label: 'My Applications', icon: FileText },
     { id: 'documents', label: 'Verified Docs', icon: FileCheck },
@@ -56,7 +53,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'companies', label: 'Companies', icon: Building2 },
     { id: 'placement-drive', label: 'Drive Schedule', icon: Calendar },
     { id: 'resources', label: 'Study Resources', icon: Folder },
-    { id: 'training-skills', label: 'Training & Skills', icon: TrendingUp },
     { id: 'messages', label: 'Messages', icon: MessageSquare, badge: 3 },
   ];
 
