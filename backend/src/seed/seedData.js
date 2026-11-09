@@ -234,6 +234,78 @@ const seed = async () => {
       },
     });
 
+    // Unfilled Student: Dilip (For onboarding / fresh profile testing)
+    await User.create({
+      name: 'Dilip',
+      email: '231cs088.dilip@giet.edu',
+      password: 'password123',
+      role: 'STUDENT',
+      phone: '',
+      location: '',
+      avatar: '/doraemon.png',
+      studentDetails: {
+        rollNumber: '231CS088',
+        rollNo: '231CS088',
+        institutionEmail: '231cs088.dilip@giet.edu',
+        department: 'Computer Science',
+        branch: 'CSE',
+        program: 'B.Tech',
+        batch: '2023-2027',
+        graduationYear: 2027,
+        cgpa: null,
+        tenthPercentage: null,
+        twelfthPercentage: null,
+        backlogs: 0,
+        activeBacklogs: 0,
+        attendancePercentage: 0,
+        placementStatus: 'UNPLACED',
+        skills: [],
+        certifications: [],
+        projects: [],
+        hobbies: [],
+        languages: [],
+        careerObjective: '',
+        resumeVerified: false,
+        profileCompletionPercent: 0,
+      },
+    });
+
+    // Unfilled Student: Sravan (For onboarding / fresh profile testing)
+    await User.create({
+      name: 'Sravan',
+      email: '231cs092.sravan@giet.edu',
+      password: 'password123',
+      role: 'STUDENT',
+      phone: '',
+      location: '',
+      avatar: '/doraemon.png',
+      studentDetails: {
+        rollNumber: '231CS092',
+        rollNo: '231CS092',
+        institutionEmail: '231cs092.sravan@giet.edu',
+        department: 'Computer Science',
+        branch: 'CSE',
+        program: 'B.Tech',
+        batch: '2023-2027',
+        graduationYear: 2027,
+        cgpa: null,
+        tenthPercentage: null,
+        twelfthPercentage: null,
+        backlogs: 0,
+        activeBacklogs: 0,
+        attendancePercentage: 0,
+        placementStatus: 'UNPLACED',
+        skills: [],
+        certifications: [],
+        projects: [],
+        hobbies: [],
+        languages: [],
+        careerObjective: '',
+        resumeVerified: false,
+        profileCompletionPercent: 0,
+      },
+    });
+
     // TNP Cell Officers
     const tnpOfficer = await User.create({
       name: 'Prof. Rajesh Mohanty',
