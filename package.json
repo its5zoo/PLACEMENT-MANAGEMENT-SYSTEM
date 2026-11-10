@@ -4,6 +4,7 @@
   "description": "Training & Placement (TNP) Management System - Full MERN Stack",
   "private": true,
   "scripts": {
+    "start": "node backend/src/server.js",
     "server": "npm --prefix backend run dev",
     "client": "npm --prefix frontend run dev",
     "seed": "npm --prefix backend run seed",
