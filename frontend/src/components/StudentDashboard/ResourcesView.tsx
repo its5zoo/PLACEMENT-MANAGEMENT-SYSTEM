@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Download, ExternalLink, BookOpen, Code, 
-  Building2, Search, X, CheckCircle2, Sparkles, Clock, 
+  Download, ExternalLink, BookOpen, 
+  Building2, Search, CheckCircle2, Sparkles, Clock, 
   ShieldCheck, Loader2
 } from 'lucide-react';
 import { api } from '../../services/api';
@@ -34,7 +34,6 @@ export const ResourcesView: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedResource, setSelectedResource] = useState<StudyResource | null>(null);
   const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
 
   useEffect(() => {
@@ -748,15 +747,12 @@ GIET Training & Placement Cell • Verified Campus Resource
                         </div>
                       </div>
 
-                      {/* Resource Type Badge */}
+                      {/* Resource Type Badge (No Box) */}
                       <span 
                         style={{ 
-                          fontSize: '0.7rem', 
+                          fontSize: '0.74rem', 
                           fontWeight: 700, 
-                          padding: '3px 8px', 
-                          borderRadius: '6px',
-                          backgroundColor: res.type === 'INTERVIEW_GUIDE' ? '#EFF6FF' : res.type === 'CODING_OA' ? '#ECFDF5' : '#F1F5F9',
-                          color: res.type === 'INTERVIEW_GUIDE' ? '#2563EB' : res.type === 'CODING_OA' ? '#059669' : '#334155',
+                          color: res.type === 'INTERVIEW_GUIDE' ? '#2563EB' : res.type === 'CODING_OA' ? '#059669' : '#475569',
                           textTransform: 'uppercase',
                           letterSpacing: '0.04em'
                         }}
@@ -769,7 +765,7 @@ GIET Training & Placement Cell • Verified Campus Resource
                       {res.title}
                     </h4>
 
-                    <div style={{ display: 'inline-block', backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', padding: '3px 8px', borderRadius: '4px', fontSize: '0.72rem', color: '#2563EB', fontWeight: 600, marginBottom: '10px' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 600, marginBottom: '8px' }}>
                       For: {res.roleSpecific}
                     </div>
 
@@ -788,49 +784,57 @@ GIET Training & Placement Cell • Verified Campus Resource
                       <span>{res.fileSize || 'Online Module'}</span>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                      <button
-                        onClick={() => setSelectedResource(res)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '6px',
-                          padding: '9px 12px',
-                          borderRadius: '6px',
-                          backgroundColor: '#2563EB',
-                          color: '#FFFFFF',
-                          fontSize: '0.82rem',
-                          fontWeight: 600,
-                          border: 'none',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <BookOpen size={14} />
-                        <span>Read Guide</span>
-                      </button>
-
-                      <button
-                        onClick={() => handleDownload(res)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '6px',
-                          padding: '9px 12px',
-                          borderRadius: '6px',
-                          backgroundColor: '#F8FAFC',
-                          color: '#334155',
-                          fontSize: '0.82rem',
-                          fontWeight: 600,
-                          border: '1px solid #CBD5E1',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <Download size={14} />
-                        <span>Download</span>
-                      </button>
+                    {/* Single Action Button (No Read Guide) */}
+                    <div>
+                      {res.externalUrl ? (
+                        <a
+                          href={res.externalUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '8px',
+                            width: '100%',
+                            padding: '10px 14px',
+                            borderRadius: '8px',
+                            backgroundColor: '#2563EB',
+                            color: '#FFFFFF',
+                            fontSize: '0.84rem',
+                            fontWeight: 600,
+                            textDecoration: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            boxSizing: 'border-box'
+                          }}
+                        >
+                          <ExternalLink size={15} />
+                          <span>Visit Official Portal</span>
+                        </a>
+                      ) : (
+                        <button
+                          onClick={() => handleDownload(res)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '8px',
+                            width: '100%',
+                            padding: '10px 14px',
+                            borderRadius: '8px',
+                            backgroundColor: '#2563EB',
+                            color: '#FFFFFF',
+                            fontSize: '0.84rem',
+                            fontWeight: 600,
+                            border: 'none',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <Download size={15} />
+                          <span>Download Material</span>
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -839,325 +843,6 @@ GIET Training & Placement Cell • Verified Campus Resource
           </div>
         )}
       </div>
-
-      {/* =========================================================
-          INTERACTIVE RESOURCE DETAIL MODAL (Google Guide, OA Sandbox, etc.)
-          ========================================================= */}
-      {selectedResource && (
-        <div 
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.7)',
-            backdropFilter: 'blur(4px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            padding: '16px'
-          }}
-          onClick={() => setSelectedResource(null)}
-        >
-          <div 
-            style={{
-              backgroundColor: '#FFFFFF',
-              borderRadius: '16px',
-              maxWidth: '820px',
-              width: '100%',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.2)',
-              position: 'relative'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div 
-              style={{ 
-                padding: '20px 24px', 
-                borderBottom: '1px solid #E2E8F0', 
-                display: 'flex', 
-                alignItems: 'flex-start', 
-                justifyContent: 'space-between',
-                position: 'sticky',
-                top: 0,
-                backgroundColor: '#FFFFFF',
-                zIndex: 2
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div 
-                  style={{ 
-                    width: '42px', 
-                    height: '42px', 
-                    borderRadius: '10px', 
-                    backgroundColor: selectedResource.companyBg, 
-                    color: '#FFFFFF', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    fontWeight: 800,
-                    fontSize: '1.05rem',
-                    flexShrink: 0
-                  }}
-                >
-                  {selectedResource.companyLogo}
-                </div>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0F172A', margin: 0 }}>
-                      {selectedResource.title}
-                    </h3>
-                  </div>
-                  <div style={{ fontSize: '0.78rem', color: '#64748B', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
-                    <span style={{ color: '#2563EB', fontWeight: 700 }}>{selectedResource.companyName} University Programs</span>
-                    <span>•</span>
-                    <span>For {selectedResource.roleSpecific}</span>
-                  </div>
-                </div>
-              </div>
-
-              <button 
-                onClick={() => setSelectedResource(null)}
-                style={{ 
-                  padding: '6px', 
-                  borderRadius: '6px', 
-                  border: '1px solid #E2E8F0', 
-                  backgroundColor: '#F8FAFC', 
-                  cursor: 'pointer',
-                  color: '#64748B'
-                }}
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {/* Modal Body */}
-            <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '22px' }}>
-              {/* Overview */}
-              <div>
-                <h4 style={{ fontSize: '0.92rem', fontWeight: 700, color: '#0F172A', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Overview & Purpose
-                </h4>
-                <p style={{ fontSize: '0.88rem', color: '#334155', lineHeight: '1.6', margin: 0 }}>
-                  {selectedResource.guideDetails?.overview || selectedResource.description}
-                </p>
-              </div>
-
-              {/* Interview Rounds Breakdown */}
-              {selectedResource.guideDetails?.interviewRounds && selectedResource.guideDetails.interviewRounds.length > 0 && (
-                <div>
-                  <h4 style={{ fontSize: '0.92rem', fontWeight: 700, color: '#0F172A', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    Interview Stages & Expectations
-                  </h4>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    {selectedResource.guideDetails.interviewRounds.map((rnd, i) => (
-                      <div 
-                        key={i} 
-                        style={{ 
-                          padding: '14px', 
-                          borderRadius: '8px', 
-                          border: '1px solid #E2E8F0', 
-                          backgroundColor: '#F8FAFC' 
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                          <span style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0F172A' }}>
-                            {rnd.round}
-                          </span>
-                          <span style={{ fontSize: '0.74rem', fontWeight: 600, color: '#2563EB', backgroundColor: '#EFF6FF', padding: '2px 8px', borderRadius: '4px' }}>
-                            {rnd.duration}
-                          </span>
-                        </div>
-                        <div style={{ fontSize: '0.8rem', color: '#475569', marginBottom: '6px' }}>
-                          <strong>Focus Area:</strong> {rnd.focus}
-                        </div>
-                        <div style={{ fontSize: '0.78rem', color: '#059669', display: 'flex', alignItems: 'flex-start', gap: '4px' }}>
-                          <CheckCircle2 size={13} style={{ flexShrink: 0, marginTop: '2px' }} />
-                          <span><strong>Recruiter Tip:</strong> {rnd.tips}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Core Topics Checklist */}
-              {selectedResource.guideDetails?.coreTopics && selectedResource.guideDetails.coreTopics.length > 0 && (
-                <div>
-                  <h4 style={{ fontSize: '0.92rem', fontWeight: 700, color: '#0F172A', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    High-Priority Technical Topics
-                  </h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '8px' }}>
-                    {selectedResource.guideDetails.coreTopics.map((top, idx) => (
-                      <div 
-                        key={idx} 
-                        style={{ 
-                          padding: '8px 12px', 
-                          borderRadius: '6px', 
-                          backgroundColor: '#EFF6FF', 
-                          border: '1px solid #DBEAFE', 
-                          fontSize: '0.8rem', 
-                          color: '#1E40AF',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px'
-                        }}
-                      >
-                        <Code size={14} />
-                        <span>{top}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Sample Questions */}
-              {selectedResource.guideDetails?.sampleQuestions && selectedResource.guideDetails.sampleQuestions.length > 0 && (
-                <div>
-                  <h4 style={{ fontSize: '0.92rem', fontWeight: 700, color: '#0F172A', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    Frequently Tested Coding Scenarios
-                  </h4>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {selectedResource.guideDetails.sampleQuestions.map((sq, i) => (
-                      <div 
-                        key={i} 
-                        style={{ 
-                          padding: '12px 14px', 
-                          borderRadius: '8px', 
-                          border: '1px solid #E2E8F0', 
-                          backgroundColor: '#FFFFFF' 
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                          <span 
-                            style={{ 
-                              fontSize: '0.68rem', 
-                              fontWeight: 700, 
-                              padding: '2px 6px', 
-                              borderRadius: '4px',
-                              backgroundColor: sq.difficulty === 'Hard' ? '#FEE2E2' : '#FEF3C7',
-                              color: sq.difficulty === 'Hard' ? '#B91C1C' : '#B45309'
-                            }}
-                          >
-                            {sq.difficulty}
-                          </span>
-                          <span style={{ fontSize: '0.72rem', color: '#64748B' }}>Topic: {sq.topic}</span>
-                        </div>
-                        <div style={{ fontSize: '0.84rem', color: '#1E293B', lineHeight: '1.4' }}>
-                          {sq.question}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Recruiter Do's and Don'ts */}
-              {selectedResource.guideDetails?.recruiterTips && selectedResource.guideDetails.recruiterTips.length > 0 && (
-                <div style={{ backgroundColor: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '8px', padding: '16px' }}>
-                  <h4 style={{ fontSize: '0.88rem', fontWeight: 700, color: '#166534', margin: '0 0 8px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <ShieldCheck size={16} />
-                    Official Recruiter Recommendations for Live Coding
-                  </h4>
-                  <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '0.82rem', color: '#14532D', lineHeight: '1.6' }}>
-                    {selectedResource.guideDetails.recruiterTips.map((tip, idx) => (
-                      <li key={idx} style={{ marginBottom: '4px' }}>{tip}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* External Video / Official Link */}
-              {selectedResource.externalUrl && (
-                <div style={{ padding: '14px', borderRadius: '8px', backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div>
-                    <div style={{ fontSize: '0.86rem', fontWeight: 700, color: '#1E40AF' }}>
-                      Official Google Interview Walkthrough Portal
-                    </div>
-                    <div style={{ fontSize: '0.76rem', color: '#3B82F6' }}>
-                      Watch live candidate demonstrations on Google Careers portal.
-                    </div>
-                  </div>
-                  <a 
-                    href={selectedResource.externalUrl} 
-                    target="_blank" 
-                    rel="noreferrer"
-                    style={{ 
-                      display: 'inline-flex', 
-                      alignItems: 'center', 
-                      gap: '4px', 
-                      padding: '8px 14px', 
-                      backgroundColor: '#2563EB', 
-                      color: '#FFFFFF', 
-                      borderRadius: '6px', 
-                      fontSize: '0.8rem', 
-                      fontWeight: 600, 
-                      textDecoration: 'none' 
-                    }}
-                  >
-                    <span>Visit Portal</span>
-                    <ExternalLink size={13} />
-                  </a>
-                </div>
-              )}
-            </div>
-
-            {/* Modal Footer */}
-            <div 
-              style={{ 
-                padding: '16px 24px', 
-                borderTop: '1px solid #E2E8F0', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'space-between',
-                backgroundColor: '#F8FAFC',
-                borderRadius: '0 0 16px 16px'
-              }}
-            >
-              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>
-                Issued via GIET Placement Management Portal • Confidential Candidate Material
-              </span>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button
-                  onClick={() => setSelectedResource(null)}
-                  style={{
-                    padding: '8px 16px',
-                    borderRadius: '6px',
-                    border: '1px solid #CBD5E1',
-                    backgroundColor: '#FFFFFF',
-                    color: '#475569',
-                    fontSize: '0.82rem',
-                    fontWeight: 600,
-                    cursor: 'pointer'
-                  }}
-                >
-                  Close
-                </button>
-                <button
-                  onClick={() => handleDownload(selectedResource)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '8px 16px',
-                    borderRadius: '6px',
-                    backgroundColor: '#2563EB',
-                    color: '#FFFFFF',
-                    fontSize: '0.82rem',
-                    fontWeight: 600,
-                    border: 'none',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <Download size={14} />
-                  <span>Download Guide (TXT/PDF)</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
