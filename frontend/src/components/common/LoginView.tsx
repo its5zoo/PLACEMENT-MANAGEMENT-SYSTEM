@@ -249,47 +249,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
           })}
         </div>
 
-        {/* Quick Student Switcher for Demo */}
-        {selectedRole === 'STUDENT' && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            marginBottom: '14px',
-            flexWrap: 'wrap'
-          }}>
-            <span style={{ fontSize: '0.72rem', color: '#64748B', fontWeight: 600 }}>Quick Student Demo:</span>
-            {[
-              { name: 'Faizaan (Complete)', email: '231cs001.faizaan@giet.edu' },
-              { name: 'Dilip (Unfilled)', email: '231cs088.dilip@giet.edu' },
-              { name: 'Sravan (Unfilled)', email: '231cs092.sravan@giet.edu' }
-            ].map(s => {
-              const isActive = email === s.email;
-              return (
-                <button
-                  key={s.email}
-                  type="button"
-                  onClick={() => {
-                    setEmail(s.email);
-                    setPassword('password123');
-                  }}
-                  style={{
-                    backgroundColor: isActive ? '#EFF6FF' : '#F8FAFC',
-                    border: `1px solid ${isActive ? '#BFDBFE' : '#E2E8F0'}`,
-                    color: isActive ? '#1D4ED8' : '#475569',
-                    padding: '3px 8px',
-                    borderRadius: '6px',
-                    fontSize: '0.73rem',
-                    fontWeight: isActive ? 700 : 500,
-                    cursor: 'pointer'
-                  }}
-                >
-                  {s.name}
-                </button>
-              );
-            })}
-          </div>
-        )}
+
 
         {/* Error Alert */}
         {error && (
