@@ -42,14 +42,25 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
+// Root endpoint for Render ping / health checks
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'TNP Placement Management System Backend API',
+    health: '/api/health',
+    version: '1.0.0',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   const databaseConnected = mongoose.connection.readyState === 1;
-  res.status(databaseConnected ? 200 : 503).json({
+  res.status(200).json({
     status: databaseConnected ? 'ok' : 'degraded',
     message: databaseConnected
       ? 'TNP Management System Backend is running smoothly'
-      : 'API is running but the database is unavailable',
+      : 'API is running. Database is connecting or running in resilient mode.',
     database: databaseConnected ? 'connected' : 'disconnected',
     timestamp: new Date().toISOString(),
   });
@@ -73,15 +84,21 @@ app.use(errorHandler);
 
 export const startServer = async () => {
   const port = Number(process.env.PORT) || 5000;
-  await connectDB();
+  const host = '0.0.0.0';
 
+  // 1. Immediately bind HTTP server to 0.0.0.0 so Render marks the deployment live
   const server = await new Promise((resolve, reject) => {
-    const listener = app.listen(port, () => resolve(listener));
+    const listener = app.listen(port, host, () => resolve(listener));
     listener.once('error', reject);
   });
 
-  console.log(`🚀 TNP Backend Server running in ${process.env.NODE_ENV || 'development'} mode on port ${port}`);
-  console.log(`🔗 API Base URL: http://localhost:${port}/api`);
+  console.log(`🚀 TNP Backend Server running in ${process.env.NODE_ENV || 'development'} mode on port ${port} (${host})`);
+  console.log(`🔗 API Base URL: http://${host}:${port}/api`);
+
+  // 2. Connect to MongoDB in background without blocking server boot
+  connectDB().catch((err) => {
+    console.warn(`⚠️ Background MongoDB connect error: ${err.message}`);
+  });
 
   const shutdown = async () => {
     server.close(async () => {
